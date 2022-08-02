@@ -11,6 +11,7 @@
             "hash": "d0717e4417357ad2f6ba7220dc2df5d2a7a57fbc08e82861fd5a51f63797f998"
         },
         {
+<<<<<<< Updated upstream
             "date": 1659075038644,
             "name": "log\\2022-07-29-smart-push.log",
             "hash": "a79def60bbe1360732b3561faa6fbe3771a469c3fd2f1648dbb2b7dd02beb551"
@@ -29,6 +30,16 @@
             "date": 1659403150304,
             "name": "log\\2022-08-02-smart-push.log",
             "hash": "5ab056d9a64fb3beb914fc8587f73b1a16afb7945a3cb8e75859dd2560906a90"
+=======
+            "date": 1659254297572,
+            "name": "log\\2022-07-31-smart-push.log",
+            "hash": "d21516e68b055008c4ca2b86251ec365399d87aabde5cc8d81328abdd0785026"
+        },
+        {
+            "date": 1659339027197,
+            "name": "log\\2022-08-01-smart-push.log",
+            "hash": "901b4b81dc53b8abce29ac05318a5939238c922351380f20641b4e61e2be3ad6"
+>>>>>>> Stashed changes
         }
     ],
     "hashType": "sha256"
