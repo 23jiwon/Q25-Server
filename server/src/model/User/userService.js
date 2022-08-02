@@ -43,6 +43,7 @@ exports.createUser = async function (nickName, email, password) {
 };
 
 
+//마카 
 exports.postSignIn = async function (email, password) {
     try {
         const emailRows = await userProvider.emailCheck(email); //이메일 확인

@@ -14,6 +14,7 @@ async function insertUserInfo(connection, insertUserInfoParams) {
     return insertUserInfoRow;
 }
 
+//마카
 // 이메일로 회원 조회. 회원가입 시 중복된 이메일 확인용
 async function selectUserEmail(connection, email) {
     const selectUserEmailQuery = `
