@@ -4,11 +4,7 @@ const jwtMiddleware = require("../../../config/jwtMiddleware");
 const userProvider = require("../User/userProvider");
 const userService = require("../User/userService");
 const baseResponse = require("../../../config/baseResponseStatus");
-<<<<<<< Updated upstream
 const {response, errResponse} = require("../../../config/response");
-=======
-//const {response, errResponse} = require("");z
->>>>>>> Stashed changes
 
 /*
     API NO.0

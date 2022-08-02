@@ -15,15 +15,9 @@
   "dependencies": {
     "compression": "^1.7.4",
     "method-override": "^3.0.0",
-<<<<<<< Updated upstream
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
     "mysql2-promise": "^0.1.4",
-=======
-    "moment": "^2.29.4",
-    "mysql2": "^2.3.3",
-    "node": "^18.7.0",
->>>>>>> Stashed changes
     "winston": "^3.8.1",
     "winston-daily-rotate-file": "^4.7.1"
   }
