@@ -1,6 +1,5 @@
 //const db=require("../../config/database");
 
-<<<<<<< Updated upstream
 // 유저 생성
 async function insertUserInfo(connection, insertUserInfoParams) {
     const insertUserInfoQuery = `
@@ -30,36 +29,6 @@ async function selectUserEmail(connection, email) {
 }
 
 
-async function selectUserPassword(connection, email){
-
-    console.log("비밀번호 조회 시작")
-
-    const selectUserPasswordQuery=`
-        SELECT password
-        FROM christmas25.usertbl
-        WHERE email = ? ;
-        `
-    const [selectUserPassword] = await connection.query(selectUserPasswordQuery,email)
-    return selectUserPassword;
-    //console.log(query);
-    /*
-    db.query(selectUserPasswordQuery ,[password], (err, data)=>{
-        if(err) {
-            console.log("조회 실패", err);
-            reject(err);
-        }
-        else {
-            console.log("조회 성공");
-            resolve(data);
-        }
-    })
-    */
-
-}
-
-module.exports = {
-    insertUserInfo,
-=======
 //이메일 체크
 async function selectUserEmail(connection, email){
 
@@ -116,7 +85,7 @@ async function selectUserPassword(connection, email){
 }
 
 module.exports = {
->>>>>>> Stashed changes
+    insertUserInfo,
     selectUserEmail,
     selectUserPassword,
 };
