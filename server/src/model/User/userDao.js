@@ -2,7 +2,7 @@
 // 유저 생성
 async function insertUserInfo(connection, insertUserInfoParams) {
     const insertUserInfoQuery = `
-        INSERT INTO usertbl(nickName, email, password)
+        INSERT INTO userTBL(nickName, email, password)
         VALUES (?, ?, ?);
     `;
     
