@@ -46,40 +46,6 @@ async function SelectQuestion(connection, userIdx,qNum) {
 }
 
 // 답 저장하기
-async function InsertAnswer(connection,answer,userIdx,qNum) {
-
-
-    const insertAnswerQuery = `
-    SELECT questionIdx, answer
-    FROM christmas25.pagetbl
-    WHERE userIdx = ? 
-    `;
-    
-    const insertAnswetRow = await connection.query(
-        insertAnswerQuery,
-        userIdx
-    );
-
-    return insertAnswetRow;
-}
-
-
-    const insertAnswerQuery = `
-    SELECT questionIdx, answer
-    FROM christmas25.pagetbl
-    WHERE userIdx = ? 
-    `;
-    
-    const insertAnswetRow = await connection.query(
-        insertAnswerQuery,
-        userIdx
-    );
-
-    return insertAnswetRow;
-}
-
-<<<<<<< HEAD
-// 답 저장하기
 async function InsertAnswer(connection, userIdx, qNum) {
     const insertAnswerQuery = `
     UPDATE christmas25.pagetbl
