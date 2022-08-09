@@ -5,8 +5,12 @@ module.exports = function(app) {
 
     
     // 3. record API
-    app.get('/members/record', record.getQuestion);
-    app.post('/members/record', record.postRecord);
-  
+
+    //질문정보가져오기 
+    app.get('/api/members/qnapage', record.getQuestion);
+
+    //답변저장
+    app.patch('/api/members/useranswer', record.patchRecord);
+
 
 };

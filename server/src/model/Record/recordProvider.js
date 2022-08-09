@@ -4,18 +4,28 @@ const recordDao = require("./recordDao");
 const { pool } = require("../../../config/database");
 const { logger } = require("../../../config/winston");
 
-exports.getQuestion = async function(email, qnum) {
+exports.getQuestion = async function(userIdx,qNum) {
     const connection = await pool.getConnection(async (conn) => conn);
-    const questionResult = await recordDao.SelectQuestion(connection, email, qnum); 
+    const questionResult = await recordDao.SelectQuestion(connection, userIdx,qNum); 
     connection.release();
 
     return questionResult;
 };
 
-exports.postRecord = async function(email, qnum, content) {
+exports.patchRecord = async function(answer,userIdx,qNum) {
+
     const connection = await pool.getConnection(async (conn) => conn);
-    const questionResult = await recordDao.InsertAnswer(connection, email, qnum, content); 
+    const InsertResult = await recordDao.InsertAnswer(connection,answer,userIdx,qNum);  
     connection.release();
 
-    return questionResult;
+    return InsertResult;
+
+};
+
+exports.getInfo = async function(userIdx, questionIdx) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Answer = await recordDao.SelectAnswer(connection, userIdx, questionIdx); 
+    connection.release();
+
+    return Answer;
 };

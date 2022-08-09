@@ -4,7 +4,7 @@ const jwtMiddleware = require("../../../config/jwtMiddleware");
 const recordProvider = require("../Record/recordProvider");
 const recordService = require("../Record/recordService");
 const baseResponse = require("../../../config/baseResponseStatus");
-const {response, errResponse} = require("../../../config/response");
+const {response, errResponse, resreturn} = require("../../../config/response");
 
 /*
     API NO.0
@@ -14,32 +14,48 @@ const {response, errResponse} = require("../../../config/response");
 */
 exports.getQuestion = async function (req,res) {
     /*
-        body : email, qnum
+        body : {userIdx,qNum}
     */
-    console.log("엥");
-   const { email, qnum } = req.body;
-   console.log( email, qnum)
+   const {userIdx,qNum} = req.body;
    const getQuestionResponse = await recordService.getQuestion(
-    email,
-    qnum
+    userIdx,
+    qNum
     );
+
+    console.log(getQuestionResponse)
 
     return res.send(getQuestionResponse);
 };
 
 //저장
-exports.postRecord = async function (req,res) {
+exports.patchRecord = async function (req,res) {
     /*
-        body : email, qnum, content
+        body : answer,userIdx,qNum 
     */
-   const { email, qnum, content } = req.body;
-
-   const postRecordResponse = await recordService.postRecord(
-    email, 
-    qnum, 
-    content
+   const { answer,userIdx,qNum  } = req.body;
+   const patchRecordResponse = await recordService.patchRecord(
+    answer,
+    userIdx,
+    qNum 
     );
 
-    return res.send(response(postRecordResponse));
+    return res.send(patchRecordResponse)
+    
 };
+
+//회원답변정보가져오기
+exports.getInfo = async function (req,res) {
+    /*
+        body : userIdx, questionIdx
+    */
+   const { userIdx, questionIdx } = req.body;
+
+   const getInfoResponse = await recordService.getInfo(
+    userIdx, 
+    questionIdx
+    );
+
+    return res.send(response(getInfoResponse));
+};
+
 
