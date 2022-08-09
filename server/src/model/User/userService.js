@@ -6,8 +6,7 @@ const userProvider = require("./userProvider");
 const userDao = require("./userDao");
 const recordDao = require("../Record/recordDao");
 const baseResponse = require("../../../config/baseResponseStatus");
-const {response} = require("../../../config/response");
-const {errResponse} = require("../../../config/response");
+const { response, errResponse, resreturn } = require("../../../config/response");
 
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
@@ -120,8 +119,9 @@ let transport = nodemailer.createTransport({
 
 // 임시 비밀번호 발송
 exports.sendPw = async function (userEmail) {
-    const connection = await pool.getConnection(async (conn) => conn);
     try{
+        const connection = await pool.getConnection(async (conn) => conn);
+
         let mailOptions = {
             from : process.env.EMAIL_USER, //TODO : 팀 이름 결정되면 수정
             to : userEmail,
@@ -135,6 +135,7 @@ exports.sendPw = async function (userEmail) {
 
         console.log(`${userEmail}로 메일 발송을 시도합니다.`);
         console.log(`random password : ${randomPassword}`);
+
         const emailRows = await userProvider.emailCheck(userEmail);
 
         console.log(`발신인 : ${process.env.EMAIL_USER}`);
@@ -144,20 +145,16 @@ exports.sendPw = async function (userEmail) {
                 if (err){
                     console.log(err);
                 } else {
-                    console.log(info);
-                    console.log(`${userEmail}에게 메일이 발송되었습니다.`);
-                    return response(baseResponse.SUCCESS);
+                    //console.log(info);
                 }
-            })
-        } else{
-            console.log('등록되지 않은 이메일입니다');
+            });
+            return response(baseResponse.SUCCESS);
+        } else {
             return errResponse(baseResponse.USER_USEREMAIL_NOT_EXIST);
         };
-        
+        connection.release();
     } catch (err) {
         logger.error(`sendTmpPw Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
-    } finally {
-        connection.release();
     }
 }
