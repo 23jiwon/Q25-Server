@@ -13,7 +13,6 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const nodemailer = require('nodemailer');
 const express = require('express');
-const router = express.Router();
 require("dotenv").config();
 const secretkey=process.env.JWT_SECRET_KEY;
 
@@ -134,24 +133,24 @@ exports.sendPw = async function (userEmail) {
             `
         };// TODO : 멘트 변경
 
-        //console.log(`${userEmail}로 메일 발송을 시도합니다.`);
-        //console.log(`random password : ${randomPassword}`);
+        console.log(`${userEmail}로 메일 발송을 시도합니다.`);
+        console.log(`random password : ${randomPassword}`);
         const emailRows = await userProvider.emailCheck(userEmail);
 
-        //console.log(`발신인 : ${process.env.EMAIL_USER}`);
+        console.log(`발신인 : ${process.env.EMAIL_USER}`);
         if (emailRows.length > 0){
             console.log(`수신인 : ${emailRows[0].nickName}`);
             transport.sendMail(mailOptions, function(err, info) {
                 if (err){
                     console.log(err);
                 } else {
-                    //console.log(info);
-                    //console.log(`${userEmail}에게 메일이 발송되었습니다.`);
+                    console.log(info);
+                    console.log(`${userEmail}에게 메일이 발송되었습니다.`);
                     return response(baseResponse.SUCCESS);
                 }
             })
         } else{
-            //console.log('등록되지 않은 이메일입니다');
+            console.log('등록되지 않은 이메일입니다');
             return errResponse(baseResponse.USER_USEREMAIL_NOT_EXIST);
         };
         
