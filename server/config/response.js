@@ -15,8 +15,6 @@ const errResponse = ({isSuccess, code, message}) => {
     }
 };
 
-const resreturn =(result) =>{
-  return result
-}
+
    
-   module.exports = { response, errResponse, resreturn };
+   module.exports = { response, errResponse };

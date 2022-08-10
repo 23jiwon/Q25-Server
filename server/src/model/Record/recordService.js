@@ -35,7 +35,7 @@ exports.patchRecord = async function (answer,userIdx,qNum) {
     const connection = await pool.getConnection(async (conn) => conn);
     try{ 
         const recordRows = await recordProvider.patchRecord(answer,userIdx,qNum);
-        /*
+
         //시간 비교
         const currentTime = new Date();
         console.log(`current Date : ${currentTime}`);
@@ -44,7 +44,7 @@ exports.patchRecord = async function (answer,userIdx,qNum) {
         if (timeCriteria >= currentTime){
             const updateOpenStatusResult = await recordDao.updateOpenStatus(connection, userQIdx);
         }
-*/
+
         connection.release();
         return response(baseResponse.SUCCESS, recordRows);
 
