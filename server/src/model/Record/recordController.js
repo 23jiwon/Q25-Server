@@ -57,3 +57,16 @@ exports.getCollection = async function (req,res) {
     return res.send(getCollectionResponse);
 };
 
+//질문리스트
+exports.getQlist = async function (req,res) {
+    /*
+        body : userIdx, questionIdx
+    */
+   const { userIdx } = req.body;
+
+   const getQlistResponse = await recordService.getQlist(
+    userIdx, 
+    );
+
+    return res.send(getQlistResponse);
+};

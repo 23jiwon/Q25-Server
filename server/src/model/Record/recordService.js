@@ -75,3 +75,21 @@ exports.getCollection = async function (userIdx) {
     }
 
 };
+
+//질문리스트
+exports.getQlist = async function (userIdx) {
+    try{
+        // 선물상자 25개 출력
+        const getQlistRows = await recordProvider.getQlistRows(userIdx);
+        const connection = await pool.getConnection(async (conn) => conn);
+        connection.release();
+
+
+        return response(baseResponse.SUCCESS, getQlistRows);
+
+    } catch (err){
+        logger.error(`getQlist Service error\n : ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+
+};

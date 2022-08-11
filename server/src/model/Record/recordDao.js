@@ -221,6 +221,115 @@ console.log(selectCollectionRow)
     return selectCollectionRow;
 }
 
+//질문 리스트 25개
+async function SelectQlist(connection, userIdx) {
+
+    //질문정보
+    const selectQuestion = `
+        SELECT questionIdx as qNum, content as qnacontent, 
+                CONCAT('http://localhost:5000/christmasQ25_asset/', questionImg) as qnaImg,
+                CONCAT('http://localhost:5000/christmasQ25_asset/', boxImg) as boxImg
+        FROM christmas25.questiontbl
+    `;
+    const [selectQuestionRow] = await connection.query(
+        selectQuestion,
+        userIdx
+    );
+    //답변정보
+    const selectAnswer = `
+    SELECT questionIdx as qNum, opened, answer
+    FROM christmas25.pagetbl
+    WHERE userIdx = ? 
+    `;
+    const [selectAnswerRow] = await connection.query(
+        selectAnswer,
+        userIdx
+    );
+
+
+    //유저 정보
+    const selectUser = `
+    SELECT nickName
+    FROM christmas25.usertbl
+    WHERE userIdx = ? 
+    `;
+    const [selectUserRow] = await connection.query(
+        selectUser,
+        userIdx
+    );
+
+    //이미지 정보
+    const selectImg = `
+    SELECT  CONCAT('http://localhost:5000/christmasQ25_asset/', imageUrl) as stampImg
+    FROM christmas25.imagetbl
+    WHERE imageIdx = 2
+    `;
+    const [selectImgRow] = await connection.query(
+        selectImg
+    );
+
+    let selectYN = []
+    for(let i = 0 ; i < 25 ; i++){
+        if(selectAnswerRow[i].answer===null){
+            let t = {answerY_N : 0}
+            selectYN.push(t);
+        }
+        else if((selectAnswerRow[i].answer).length > 0){
+            let t = {answerY_N : 1}
+            selectYN.push(t);
+        }
+        else{
+            let t = {answerY_N : 0}
+            selectYN.push(t);
+        }
+    }
+    
+    /*
+{ nickName: “ ”, 
+  stampImg: “ “,
+  question : {
+  {
+    qNum: “1”,
+    boxImg: “06_gift01.png”,
+    opened : 1,
+    answerY_N : 1,
+   },
+  {
+    qNum: “2”,
+    boxImg: “06_gift02.png” ,
+    opened : 1,
+    answerY_N : 1,
+   }
+ }
+}
+      
+    */
+
+    //리턴값 
+    let Qlist = []
+    for(let i = 0 ; i < selectAnswerRow.length ; i++){
+        let t = {
+            qNum : selectAnswerRow[i].qNum,
+            boxImg : selectQuestionRow[i].boxImg,
+            opened : selectAnswerRow[i].opened,
+            answerY_N : selectYN[i].answerY_N,
+        }
+        Qlist.push(t);
+    }
+
+    let selectCollectionRow = 
+        {
+        nickName : selectUserRow[0].nickName,
+        stampImg: selectImgRow[0].stampImg,
+        question: Qlist
+        }
+        
+console.log(selectCollectionRow)
+
+    return selectCollectionRow;
+}
+
+
 
 
 module.exports = {
@@ -229,5 +338,6 @@ module.exports = {
     addNewRows,
     getTimeCriteria,
     updateOpenStatus,
-    SelectCollection
+    SelectCollection,
+    SelectQlist
 };
