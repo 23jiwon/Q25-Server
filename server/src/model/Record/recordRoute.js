@@ -3,14 +3,12 @@ module.exports = function(app) {
     const jwtMiddleware = require('../../../config/jwtMiddleware');
     
 
-    
     // 3. record API
 
-    //질문정보가져오기 
+    //질문정보가져오기 (답변 화면 불러오기)
     app.get('/api/members/qnapage', record.getQuestion);
 
     //답변저장
     app.patch('/api/members/useranswer', record.patchRecord);
-
 
 };
