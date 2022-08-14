@@ -17,8 +17,18 @@ const { Console } = require("console");
 exports.getQuestion = async function (userIdx,qNum) {
     try{
         // 이메일에 있는 질문 번호 가져오기
-        const questionRows = await recordProvider.getQuestion(userIdx,qNum);
         const connection = await pool.getConnection(async (conn) => conn);
+        const questionRows = await recordProvider.getQuestion(userIdx,qNum);
+
+        //시간 비교
+        const currentTime = new Date();
+        console.log(`current Date : ${currentTime}`);
+        const timeCriteria = await postDao.getTimeCriteria(connection, questionIdx);
+        
+        if (timeCriteria >= currentTime){
+            const updateOpenStatusResult = await recordDao.updateOpenStatus(connection, userQIdx);
+        }
+
         connection.release();
 
         console.log(questionRows)
@@ -36,14 +46,7 @@ exports.patchRecord = async function (answer,userIdx,qNum) {
     try{ 
         const recordRows = await recordProvider.patchRecord(answer,userIdx,qNum);
 
-        //시간 비교
-        const currentTime = new Date();
-        console.log(`current Date : ${currentTime}`);
-        const timeCriteria = await postDao.getTimeCriteria(connection, questionIdx);
         
-        if (timeCriteria >= currentTime){
-            const updateOpenStatusResult = await recordDao.updateOpenStatus(connection, userQIdx);
-        }
         connection.release();
         return response(recordRows);
     } catch (err){

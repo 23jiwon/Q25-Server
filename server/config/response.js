@@ -19,8 +19,6 @@ const resreturn =(result) =>{
   return result
 }
    
-<<<<<<< HEAD
-   module.exports = { response, errResponse, resreturn };
-=======
+
 module.exports = { response, errResponse, resreturn };
->>>>>>> wendy2
+
