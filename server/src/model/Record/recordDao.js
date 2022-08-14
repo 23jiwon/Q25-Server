@@ -1,4 +1,3 @@
-
 // 질문, 답변가져오기 (답은 null일수도있음)
 async function SelectQuestion(connection, userIdx,qNum) {
     const selectQuestion = `
@@ -10,7 +9,7 @@ async function SelectQuestion(connection, userIdx,qNum) {
         selectQuestion,
         qNum
     );
-//DB수정해서 IDX 없애고 이메일넣던가해야함
+//DB수정해서 IDX 없애고 이메일넣던가해야함 --- 이거 답변도 보내야하지않나? 물어봐야함
     const selectAnswer = `
     SELECT answer
     FROM christmas25.pagetbl
@@ -32,21 +31,21 @@ async function SelectQuestion(connection, userIdx,qNum) {
 
     */
  
-    let selectQARow = {
-        question : 
+    let selectQARow = 
         {
         qNum:selectquestionRow[0].qNum,
         qnaImg: selectquestionRow[0].qnaImg,
         qnacontent:selectquestionRow[0].qnacontent
         }
-        }
+        
 
 
     return selectQARow;
 }
 
+
 // 답 저장하기
-async function InsertAnswer(connection, userIdx, qNum) {
+async function InsertAnswer(connection, answer, userIdx, qNum) {
     const insertAnswerQuery = `
     UPDATE christmas25.pagetbl
     SET answer=?
@@ -98,17 +97,15 @@ async function InsertAnswer(connection, userIdx, qNum) {
         selectYN++;
     }
 
-    let AnswerRow = {
-        isSuccess:
+    let AnswerRow = 
         {
         qNum:selectQuestionRow[0].qNum,
         qnaImg: selectQuestionRow[0].qnaImg,
         qnacontent:selectQuestionRow[0].qnacontent,
         answerY_N : selectYN,
         answer : selectAnswerRow[0].answer
-        },
-        message: "성공"     
-        }
+        }  
+        
 
     return AnswerRow; 
 }
@@ -149,10 +146,198 @@ async function updateOpenStatus(connection, userQIdx) {
     return updateOpenStatusRow[0];
 };
 
+//질문 모아보기 답변한것만
+async function SelectCollection(connection, userIdx) {
+
+    //질문정보
+    const selectQuestion = `
+        SELECT questionIdx as qNum, content as qnacontent, CONCAT('http://localhost:5000/christmasQ25_asset/', questionImg) as qnaImg
+        FROM christmas25.questiontbl
+    `;
+    const [selectQuestionRow] = await connection.query(
+        selectQuestion,
+        userIdx
+    );
+    //답변정보
+    const selectAnswer = `
+    SELECT questionIdx as qNum, answer
+    FROM christmas25.pagetbl
+    WHERE userIdx = ? and answer is not null
+    `;
+    const [selectAnswerRow] = await connection.query(
+        selectAnswer,
+        userIdx
+    );
+
+    //답변이 있는 질문 모으기
+    let newQ = []
+    for(let i = 0 ; i < selectAnswerRow.length ; i++){
+        let num = selectAnswerRow[i].qNum
+        let t = {qnacontent : selectQuestionRow[num].qnacontent}
+        newQ.push(t);
+    }
+
+    //유저 정보
+    const selectUser = `
+    SELECT nickName
+    FROM christmas25.usertbl
+    WHERE userIdx = ? 
+    `;
+    const [selectUserRow] = await connection.query(
+        selectUser,
+        userIdx
+    );
+    
+    /*
+        { nickName : “ “,
+        question:
+        {
+        qNum : ”1”,
+        qnacontent : “ “,
+        answer : ” ” 
+        },
+      
+    */
+
+    //리턴값 
+    let collection = []
+    for(let i = 0 ; i < selectAnswerRow.length ; i++){
+        let t = {
+            qNum : selectAnswerRow[i].qNum,
+            qnacontent : newQ[i].qnacontent,
+            answer : selectAnswerRow[i].answer
+        }
+        collection.push(t);
+    }
+
+    let selectCollectionRow = 
+        {
+        nickName : selectUserRow[0].nickName,
+        question: collection
+        }
+        
+console.log(selectCollectionRow)
+
+    return selectCollectionRow;
+}
+
+//질문 리스트 25개
+async function SelectQlist(connection, userIdx) {
+
+    //질문정보
+    const selectQuestion = `
+        SELECT questionIdx as qNum, content as qnacontent, 
+                CONCAT('http://localhost:5000/christmasQ25_asset/', questionImg) as qnaImg,
+                CONCAT('http://localhost:5000/christmasQ25_asset/', boxImg) as boxImg
+        FROM christmas25.questiontbl
+    `;
+    const [selectQuestionRow] = await connection.query(
+        selectQuestion,
+        userIdx
+    );
+    //답변정보
+    const selectAnswer = `
+    SELECT questionIdx as qNum, opened, answer
+    FROM christmas25.pagetbl
+    WHERE userIdx = ? 
+    `;
+    const [selectAnswerRow] = await connection.query(
+        selectAnswer,
+        userIdx
+    );
+
+
+    //유저 정보
+    const selectUser = `
+    SELECT nickName
+    FROM christmas25.usertbl
+    WHERE userIdx = ? 
+    `;
+    const [selectUserRow] = await connection.query(
+        selectUser,
+        userIdx
+    );
+
+    //이미지 정보
+    const selectImg = `
+    SELECT  CONCAT('http://localhost:5000/christmasQ25_asset/', imageUrl) as stampImg
+    FROM christmas25.imagetbl
+    WHERE imageIdx = 2
+    `;
+    const [selectImgRow] = await connection.query(
+        selectImg
+    );
+
+    let selectYN = []
+    for(let i = 0 ; i < 25 ; i++){
+        if(selectAnswerRow[i].answer===null){
+            let t = {answerY_N : 0}
+            selectYN.push(t);
+        }
+        else if((selectAnswerRow[i].answer).length > 0){
+            let t = {answerY_N : 1}
+            selectYN.push(t);
+        }
+        else{
+            let t = {answerY_N : 0}
+            selectYN.push(t);
+        }
+    }
+    
+    /*
+{ nickName: “ ”, 
+  stampImg: “ “,
+  question : {
+  {
+    qNum: “1”,
+    boxImg: “06_gift01.png”,
+    opened : 1,
+    answerY_N : 1,
+   },
+  {
+    qNum: “2”,
+    boxImg: “06_gift02.png” ,
+    opened : 1,
+    answerY_N : 1,
+   }
+ }
+}
+      
+    */
+
+    //리턴값 
+    let Qlist = []
+    for(let i = 0 ; i < selectAnswerRow.length ; i++){
+        let t = {
+            qNum : selectAnswerRow[i].qNum,
+            boxImg : selectQuestionRow[i].boxImg,
+            opened : selectAnswerRow[i].opened,
+            answerY_N : selectYN[i].answerY_N,
+        }
+        Qlist.push(t);
+    }
+
+    let selectCollectionRow = 
+        {
+        nickName : selectUserRow[0].nickName,
+        stampImg: selectImgRow[0].stampImg,
+        question: Qlist
+        }
+        
+console.log(selectCollectionRow)
+
+    return selectCollectionRow;
+}
+
+
+
+
 module.exports = {
     SelectQuestion,
     InsertAnswer,
     addNewRows,
     getTimeCriteria,
-    updateOpenStatus
+    updateOpenStatus,
+    SelectCollection,
+    SelectQlist
 };

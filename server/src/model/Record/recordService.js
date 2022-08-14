@@ -32,7 +32,7 @@ exports.getQuestion = async function (userIdx,qNum) {
         connection.release();
 
         console.log(questionRows)
-        return resonse(questionRows);
+        return response(baseResponse.SUCCESS,questionRows);
 
     } catch (err){
         logger.error(`getQuestion Service error\n : ${err.message}`);
@@ -48,7 +48,10 @@ exports.patchRecord = async function (answer,userIdx,qNum) {
 
         
         connection.release();
-        return response(recordRows);
+
+        return response(baseResponse.SUCCESS, recordRows);
+
+
     } catch (err){
         logger.error(`patchRecord Service error\n : ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
@@ -59,17 +62,36 @@ exports.patchRecord = async function (answer,userIdx,qNum) {
 
 
 // 회원답변정보가져오기
-exports.getInfo = async function (userIdx, questionIdx) {
+exports.getCollection = async function (userIdx) {
     try{
         // 이메일에 있는 질문 번호 가져오기
-        const AnswerRows = await recordProvider.getInfo(userIdx, questionIdx);
+        const CollectionRows = await recordProvider.getCollection(userIdx);
         const connection = await pool.getConnection(async (conn) => conn);
         connection.release();
 
-        return response(AnswerRows);
+
+        return response(baseResponse.SUCCESS, CollectionRows);
 
     } catch (err){
-        logger.error(`getInfo Service error\n : ${err.message}`);
+        logger.error(`getCollection Service error\n : ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+
+};
+
+//질문리스트
+exports.getQlist = async function (userIdx) {
+    try{
+        // 선물상자 25개 출력
+        const getQlistRows = await recordProvider.getQlistRows(userIdx);
+        const connection = await pool.getConnection(async (conn) => conn);
+        connection.release();
+
+
+        return response(baseResponse.SUCCESS, getQlistRows);
+
+    } catch (err){
+        logger.error(`getQlist Service error\n : ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
 

@@ -23,7 +23,6 @@ exports.getQuestion = async function (req,res) {
     );
 
     console.log(getQuestionResponse)
-
     return res.send(getQuestionResponse);
 };
 
@@ -43,19 +42,31 @@ exports.patchRecord = async function (req,res) {
     
 };
 
-//회원답변정보가져오기
-exports.getInfo = async function (req,res) {
+
+//답변 모아보기
+exports.getCollection = async function (req,res) {
     /*
         body : userIdx, questionIdx
     */
-   const { userIdx, questionIdx } = req.body;
+   const { userIdx } = req.body;
 
-   const getInfoResponse = await recordService.getInfo(
+   const getCollectionResponse = await recordService.getCollection(
     userIdx, 
-    questionIdx
     );
 
-    return res.send(response(getInfoResponse));
+    return res.send(getCollectionResponse);
 };
 
+//질문리스트
+exports.getQlist = async function (req,res) {
+    /*
+        body : userIdx, questionIdx
+    */
+   const { userIdx } = req.body;
 
+   const getQlistResponse = await recordService.getQlist(
+    userIdx, 
+    );
+
+    return res.send(getQlistResponse);
+};

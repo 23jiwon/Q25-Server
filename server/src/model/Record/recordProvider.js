@@ -22,10 +22,21 @@ exports.patchRecord = async function(answer,userIdx,qNum) {
 
 };
 
-exports.getInfo = async function(userIdx, questionIdx) {
+exports.getCollection = async function(userIdx) {
+
     const connection = await pool.getConnection(async (conn) => conn);
-    const Answer = await recordDao.SelectAnswer(connection, userIdx, questionIdx); 
+    const Collection = await recordDao.SelectCollection(connection, userIdx); 
     connection.release();
 
-    return Answer;
+    return Collection;
 };
+
+exports.getQlistRows = async function(userIdx) {
+
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Qlist = await recordDao.SelectQlist(connection, userIdx); 
+    connection.release();
+
+    return Qlist;
+};
+
