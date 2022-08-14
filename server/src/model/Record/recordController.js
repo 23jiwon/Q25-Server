@@ -6,6 +6,7 @@ const recordService = require("../Record/recordService");
 const baseResponse = require("../../../config/baseResponseStatus");
 const {response, errResponse, resreturn} = require("../../../config/response");
 
+
 /*
     API NO.0
     API Name : Test API
@@ -62,8 +63,10 @@ exports.getQlist = async function (req,res) {
     /*
         body : userIdx, questionIdx
     */
-   const { userIdx } = req.body;
 
+    let user = req.get('userIdx')
+   let userIdx = Math.round(user);
+   console.log(userIdx)
    const getQlistResponse = await recordService.getQlist(
     userIdx, 
     );

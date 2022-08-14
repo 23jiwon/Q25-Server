@@ -158,3 +158,24 @@ exports.sendPw = async function (userEmail) {
         return errResponse(baseResponse.DB_ERROR);
     }
 }
+
+//비밀번호 변경
+exports.patchPw = async function (userIdx, old_pw, new_pw) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const PwRows = await userProvider.InsertPw(userIdx, old_pw, new_pw);
+
+    console.log(PwRows)
+    if(PwRows.old_pw === null){
+        return response(baseResponse.UPDATE_PW_WRONG);
+    }
+    try{
+
+        return response(baseResponse.SUCCESS, PwRows);
+
+    } catch (err) {
+        logger.error(`patchPw Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    } finally {
+        connection.release();
+    }
+}
