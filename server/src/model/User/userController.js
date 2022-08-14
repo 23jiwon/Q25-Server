@@ -100,3 +100,14 @@ exports.sendTempPw = async function (req, res) {
 
    return res.send(sendPwResponse);
 };
+
+exports.patchPw = async function (req, res) {
+    /*
+         body : email //TODO: body값 수정된거 확인해야함!
+    */
+    const { userIdx, old_pw, new_pw } = req.body;
+
+   const patchPwResponse = await userService.patchPw(userIdx, old_pw, new_pw);
+   return res.send(patchPwResponse);
+
+};
