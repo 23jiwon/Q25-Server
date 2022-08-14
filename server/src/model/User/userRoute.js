@@ -14,4 +14,8 @@ module.exports = function(app) {
     // 비밀번호 발송 API
     app.post('/members/pw', user.sendTempPw);
 
+    // 비밀번호 변경 API
+    app.patch('/api/members/pw', user.patchPw);
+
+
 };

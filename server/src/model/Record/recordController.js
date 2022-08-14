@@ -57,15 +57,16 @@ exports.getCollection = async function (req,res) {
     return res.send(getCollectionResponse);
 };
 
-//질문리스트
+//질문리스트 -------------------------------------------------------------쿼리 못받아서 userIdx 강제입력
 exports.getQlist = async function (req,res) {
     /*
         body : userIdx, questionIdx
     */
    const { userIdx } = req.body;
-
+   //사용할 userIdx 번호 넣어서 하시면 됩니다 
+   let user = 1
    const getQlistResponse = await recordService.getQlist(
-    userIdx, 
+    user, 
     );
 
     return res.send(getQlistResponse);

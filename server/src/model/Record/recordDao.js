@@ -1,7 +1,7 @@
 // 질문, 답변가져오기 (답은 null일수도있음)
 async function SelectQuestion(connection, userIdx,qNum) {
     const selectQuestion = `
-        SELECT questionIdx as qNum, content as qnacontent, CONCAT('http://localhost:5000/christmasQ25_asset/', questionImg) as qnaImg
+        SELECT questionIdx as qNum, content as qnacontent, CONCAT('http://localhost:3001/christmasQ25_asset/', questionImg) as qnaImg
         FROM christmas25.questiontbl
         WHERE questionIdx = ?
     `;
@@ -227,8 +227,8 @@ async function SelectQlist(connection, userIdx) {
     //질문정보
     const selectQuestion = `
         SELECT questionIdx as qNum, content as qnacontent, 
-                CONCAT('http://localhost:5000/christmasQ25_asset/', questionImg) as qnaImg,
-                CONCAT('http://localhost:5000/christmasQ25_asset/', boxImg) as boxImg
+                CONCAT('http://localhost:3001/christmasQ25_asset/', questionImg) as qnaImg,
+                CONCAT('http://localhost:3001/christmasQ25_asset/', boxImg) as boxImg
         FROM christmas25.questiontbl
     `;
     const [selectQuestionRow] = await connection.query(
