@@ -6,6 +6,7 @@ const recordService = require("../Record/recordService");
 const baseResponse = require("../../../config/baseResponseStatus");
 const {response, errResponse, resreturn} = require("../../../config/response");
 
+
 /*
     API NO.0
     API Name : Test API
@@ -62,9 +63,10 @@ exports.getQlist = async function (req,res) {
     /*
         body : userIdx, questionIdx
     */
-   const { userIdx } = req.body;
-   //사용할 userIdx 번호 넣어서 하시면 됩니다 
-   let user = 1
+
+    let user = req.get('userIdx')
+   let userIdx = Math.round(user);
+
    const getQlistResponse = await recordService.getQlist(
     user, 
     );
