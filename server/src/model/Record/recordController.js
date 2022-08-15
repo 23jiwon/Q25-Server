@@ -64,6 +64,7 @@ exports.getQlist = async function (req,res) {
         body : userIdx, questionIdx
     */
 
+        console.log(req)
     let user = req.get('userIdx')
    let userIdx = Math.round(user);
    console.log(userIdx)

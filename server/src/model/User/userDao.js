@@ -53,7 +53,6 @@ async function selectLoginEmail(connection, email) {
         let i = {email : null }
         emailRows.push(i);
     }
-    console.log(emailRows)
     return emailRows;
 }
 
