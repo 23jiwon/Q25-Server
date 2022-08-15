@@ -58,7 +58,7 @@ exports.getCollection = async function (req,res) {
     return res.send(getCollectionResponse);
 };
 
-//질문리스트
+//질문리스트 -------------------------------------------------------------쿼리 못받아서 userIdx 강제입력
 exports.getQlist = async function (req,res) {
     /*
         body : userIdx, questionIdx
@@ -67,9 +67,9 @@ exports.getQlist = async function (req,res) {
         console.log(req)
     let user = req.get('userIdx')
    let userIdx = Math.round(user);
-   console.log(userIdx)
+
    const getQlistResponse = await recordService.getQlist(
-    userIdx, 
+    user, 
     );
 
     return res.send(getQlistResponse);
