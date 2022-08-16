@@ -41,13 +41,11 @@ exports.postUsers = async function (req, res) {
         return res.send(response(baseResponse.SIGNUP_EMAIL_LENGTH));
    }
 
-   // TODO : 이메일 형식 체크
-   /*
-   if (!regexEmail.test(email)) {
-     return res.send(response(baseResponse.SIGNUP_EMAIL_ERROR_TYPE));
-   }
-   */
-   // TODO : 비밀번호 형식적 validation 필요?
+   if(!password) {
+          return res.send(response(baseResponse.SIGNUP_PASSWORD_EMPTY));
+     } else if(password.length > 30){
+          return res.send(response(baseResponse.SIGNUP_PASSWORD_LENGTH));
+     }
 
    const signUpResponse = await userService.createUser(
         nickName,
