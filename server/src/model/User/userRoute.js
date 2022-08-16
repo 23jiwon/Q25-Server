@@ -13,12 +13,7 @@ module.exports = function(app) {
 
     // 비밀번호 발송 API
     app.post('/api/members/pw', user.sendTempPw);
-<<<<<<< HEAD
-=======
 
     // 비밀번호 변경 API
-    app.patch('/api/members/pw', user.patchPw);
-
->>>>>>> 11b1307a5565b9bbf3729b06a915e785552685e6
-
+    app.patch('/api/members/newpw', user.patchPw);
 };

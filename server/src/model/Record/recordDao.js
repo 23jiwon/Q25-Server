@@ -148,6 +148,7 @@ async function updateOpenStatus(connection, userQIdx) {
 
 //질문 모아보기 답변한것만
 async function SelectCollection(connection, userIdx) {
+    console.log(userIdx)
 
     //질문정보
     const selectQuestion = `
@@ -209,6 +210,7 @@ async function SelectCollection(connection, userIdx) {
         }
         collection.push(t);
     }
+    console.log(collection)
 
     let selectCollectionRow = 
         {

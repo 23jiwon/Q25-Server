@@ -49,12 +49,14 @@ exports.getCollection = async function (req,res) {
     /*
         body : userIdx, questionIdx
     */
-   const { userIdx } = req.body;
+   console.log("통신")
+   const { userIdx } = req.query;
+   let user = 27
 
    const getCollectionResponse = await recordService.getCollection(
-    userIdx, 
+    user, 
     );
-
+    console.log(getCollectionResponse);
     return res.send(getCollectionResponse);
 };
 
