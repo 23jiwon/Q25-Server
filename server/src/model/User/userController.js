@@ -42,17 +42,10 @@ exports.postUsers = async function (req, res) {
    }
 
    if(!password) {
-<<<<<<< HEAD
-        return res.send(response(baseResponse.SIGNUP_PASSWORD_EMPTY));
+     return res.send(response(baseResponse.SIGNUP_PASSWORD_EMPTY));
     } else if(password.length > 30){
     return res.send(response(baseResponse.SIGNUP_PASSWORD_LENGTH));
     }
-=======
-          return res.send(response(baseResponse.SIGNUP_PASSWORD_EMPTY));
-     } else if(password.length > 30){
-          return res.send(response(baseResponse.SIGNUP_PASSWORD_LENGTH));
-     }
->>>>>>> 11b1307a5565b9bbf3729b06a915e785552685e6
 
    const signUpResponse = await userService.createUser(
         nickName,
