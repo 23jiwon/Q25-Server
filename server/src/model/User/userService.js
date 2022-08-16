@@ -195,14 +195,18 @@ exports.patchPw = async function (userIdx, old_pw, new_pw) {
 }
 
 exports.logout = async function(userIdx) {
+    const connection = await pool.getConnection(async (conn) => conn);
     try{
-        const connection = await pool.getConnection(async (conn) => conn);
-        const logoutResult = await userDao.logout(connection, userIdx);
+        const logoutRows = await userProviser.logout(userIdx);
+        console.log(logoutRows);
+        // if(logoutRows != "성공")
 
-        connection.release();
+        
         return response(baseResponse.SUCCESS);
     } catch (err) {
         return errResponse(baseResponse.DB_ERROR);
+    } finally {
+        connection.release();
     }
 
 
