@@ -74,7 +74,6 @@ exports.postSignIn = async function (email, password) {
         console.log("이메일확인끝")
 
         const passwordRows = await userProvider.passwordCheck(email);
-
         if (passwordRows[0].password != password) {
             return errResponse(baseResponse.SIGNIN_PASSWORD_WRONG);
         }
@@ -192,5 +191,34 @@ exports.patchPw = async function (userIdx, old_pw, new_pw) {
         return errResponse(baseResponse.DB_ERROR);
     } finally {
         connection.release();
+    }
+}
+
+exports.logout = async function(userIdx) {
+    try{
+        const connection = await pool.getConnection(async (conn) => conn);
+        const logoutResult = await userDao.logout(connection, userIdx);
+
+        connection.release();
+        return response(baseResponse.SUCCESS);
+    } catch (err) {
+        return errResponse(baseResponse.DB_ERROR);
+    }
+
+
+}
+
+exports.withdraw = async function(email, password) {
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const checkAccountResult = await userProvider.checkAccout(email, password);
+        const userIdx = checkAccountResult[0][0].userIdx;
+        console.log(userIdx);
+        const withdrawResult = await userDao.withdrawAccount(connection, userIdx);
+        console.log("withdrawResult 이후 :", withdrawResult);
+        connection.release();
+        return response(baseResponse.SUCCESS);
+    } catch (err) {
+        return errResponse(baseResponse.DB_ERROR);
     }
 }

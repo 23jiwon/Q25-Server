@@ -105,3 +105,28 @@ exports.patchPw = async function (req, res) {
    return res.send(patchPwResponse);
 
 };
+
+/*
+     API NAME : 로그아웃
+*/
+exports.logout = async function (req, res) {
+     /*
+          body : userIdx
+     */
+    const {userIdx} = req.body.userIdx;
+    console.log(req.body.userIdx);
+    const logoutResponse = await userService.logout(userIdx);
+    return res.send(logoutResponse);
+}
+
+/**
+     API NAME : 회원탈퇴
+ */
+exports.withdraw = async function (req, res) {
+     /*
+          body : { email, password }
+     */
+    const {email, password} = req.body;
+    const withdrawResponse = await userService.withdraw(email, password);
+    return res.send(withdrawResponse);
+}
