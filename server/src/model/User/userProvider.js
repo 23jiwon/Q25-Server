@@ -65,3 +65,10 @@ exports.InsertPw = async function(userIdx, old_pw, new_pw) {
 
   return InsertPw;
 };
+
+exports.checkAccout = async function (email, password) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const checkAccoutResult = await userDao.accountCheck(connection, email, password);
+  connection.release();
+  return checkAccoutResult;
+}

@@ -122,6 +122,38 @@ async function InsertPw(connection, userIdx, old_pw, new_pw){
     return selectNewPw;
 }
 
+async function updatePw(connection, randomPassword, nickName) {
+    const updatePwQuery = `
+        UPDATE christmas25.usertbl
+        SET password = ?
+        WHERE nickName = ?;
+    `;
+    const updatePwRow = await connection.query(updatePwQuery, [randomPassword, nickName]);
+    return updatePwRow;
+}
+
+
+
+//계정 존재여부 확인
+async function accountCheck(connection, email, password) {
+    const accountCheckQuery = `
+        SELECT userIdx
+        FROM usertbl
+        WHERE email = ? AND password = ?;
+    `;
+    const accountCheckRows = await connection.query(accountCheckQuery, [email, password]);
+    return accountCheckRows;
+}
+
+async function withdrawAccount(connection, userIdx) {
+    const withdrawAccountQuery = `
+        UPDATE usertbl
+        SET userStatus = 'INACTIVE'
+        WHERE userIdx = ?;
+    `;
+    const withdrawAccoutRows = await connection.query(withdrawAccountQuery, userIdx);
+    return withdrawAccoutRows;
+}
 
 module.exports = {
     insertUserInfo,
@@ -132,4 +164,7 @@ module.exports = {
     InsertUserToken,
     selectLoginEmail,
     InsertPw,
+    updatePw,
+    accountCheck,
+    withdrawAccount
 };

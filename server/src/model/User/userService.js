@@ -74,7 +74,6 @@ exports.postSignIn = async function (email, password) {
         console.log("이메일확인끝")
 
         const passwordRows = await userProvider.passwordCheck(email);
-
         if (passwordRows[0].password != password) {
             return errResponse(baseResponse.SIGNIN_PASSWORD_WRONG);
         }
@@ -133,9 +132,8 @@ let transport = nodemailer.createTransport({
 
 // 임시 비밀번호 발송
 exports.sendPw = async function (userEmail) {
+    const connection = await pool.getConnection(async (conn) => conn);
     try{
-        const connection = await pool.getConnection(async (conn) => conn);
-
         let mailOptions = {
             from : process.env.EMAIL_USER, //TODO : 팀 이름 결정되면 수정
             to : userEmail,
@@ -151,8 +149,8 @@ exports.sendPw = async function (userEmail) {
         console.log(`random password : ${randomPassword}`);
 
         const emailRows = await userProvider.emailCheck(userEmail);
-
-        console.log(`발신인 : ${process.env.EMAIL_USER}`);
+        const nickName = emailRows[0].nickName;
+        // console.log(`발신인 : ${process.env.EMAIL_USER}`);
         if (emailRows.length > 0){
             console.log(`수신인 : ${emailRows[0].nickName}`);
             transport.sendMail(mailOptions, function(err, info) {
@@ -162,14 +160,16 @@ exports.sendPw = async function (userEmail) {
                     //console.log(info);
                 }
             });
+            const newpw = await userDao.updatePw(connection, randomPassword, nickName);
             return response(baseResponse.SUCCESS);
         } else {
             return errResponse(baseResponse.USER_USEREMAIL_NOT_EXIST);
         };
-        connection.release();
     } catch (err) {
         logger.error(`sendTmpPw Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
+    } finally{
+        connection.release();
     }
 }
 
@@ -191,5 +191,38 @@ exports.patchPw = async function (userIdx, old_pw, new_pw) {
         return errResponse(baseResponse.DB_ERROR);
     } finally {
         connection.release();
+    }
+}
+
+exports.logout = async function(userIdx) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    try{
+        const logoutRows = await userProviser.logout(userIdx);
+        console.log(logoutRows);
+        // if(logoutRows != "성공")
+
+        
+        return response(baseResponse.SUCCESS);
+    } catch (err) {
+        return errResponse(baseResponse.DB_ERROR);
+    } finally {
+        connection.release();
+    }
+
+
+}
+
+exports.withdraw = async function(email, password) {
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const checkAccountResult = await userProvider.checkAccout(email, password);
+        const userIdx = checkAccountResult[0][0].userIdx;
+        console.log(userIdx);
+        const withdrawResult = await userDao.withdrawAccount(connection, userIdx);
+        console.log("withdrawResult 이후 :", withdrawResult);
+        connection.release();
+        return response(baseResponse.SUCCESS);
+    } catch (err) {
+        return errResponse(baseResponse.DB_ERROR);
     }
 }

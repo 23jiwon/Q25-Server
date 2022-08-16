@@ -90,10 +90,6 @@ exports.sendTempPw = async function (req, res) {
    if(!email){
     return res.send(response(baseResponse.SIGNIN_EMAIL_EMPTY));
    }
-   //TODO : 이메일 형식 체크?
-//     if (!regexEmail.test(email))
-//         return res.send(response(baseResponse.SIGNUP_EMAIL_ERROR_TYPE));
-
    const sendPwResponse = await userService.sendPw(email);
 
    return res.send(sendPwResponse);
@@ -109,3 +105,28 @@ exports.patchPw = async function (req, res) {
    return res.send(patchPwResponse);
 
 };
+
+/*
+     API NAME : 로그아웃
+*/
+exports.logout = async function (req, res) {
+     /*
+          body : userIdx
+     */
+    console.log(req,body);
+    const {userIdx} = req.body;
+    const logoutResponse = await userService.logout(userIdx);
+    return res.send(logoutResponse);
+}
+
+/**
+     API NAME : 회원탈퇴
+ */
+exports.withdraw = async function (req, res) {
+     /*
+          body : { email, password }
+     */
+    const {email, password} = req.body;
+    const withdrawResponse = await userService.withdraw(email, password);
+    return res.send(withdrawResponse);
+}

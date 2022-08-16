@@ -16,4 +16,10 @@ module.exports = function(app) {
 
     // 비밀번호 변경 API
     app.patch('/api/members/newpw', user.patchPw);
+
+    // 로그아웃 API
+    app.delete('/api/members/logout', user.logout);
+
+    // 회원탈퇴 API
+    app.patch('/api/members/withdraw', user.withdraw);
 };
