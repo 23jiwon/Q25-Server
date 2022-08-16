@@ -20,7 +20,8 @@ exports.createUser = async function (nickName, email, password) {
     try{
         // 이메일 중복 확인
         const emailRows = await userProvider.emailCheck(email);
-        if(emailRows.length > 0) {
+        console.log("emailRows[0]:", emailRows[0]);
+        if(emailRows[0].length > 0) {
             return errResponse(baseResponse.SIGNUP_REDUNDANT_EMAIL);
         }
 
