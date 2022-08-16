@@ -64,12 +64,9 @@ exports.getQlist = async function (req,res) {
         body : userIdx, questionIdx
     */
 
-        console.log(req)
-    let user = req.get('userIdx')
-   let userIdx = Math.round(user);
-
+    const { userIdx } = req.query;
    const getQlistResponse = await recordService.getQlist(
-    user, 
+    userIdx, 
     );
 
     return res.send(getQlistResponse);
