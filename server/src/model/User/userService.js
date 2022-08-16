@@ -133,9 +133,8 @@ let transport = nodemailer.createTransport({
 
 // 임시 비밀번호 발송
 exports.sendPw = async function (userEmail) {
+    const connection = await pool.getConnection(async (conn) => conn);
     try{
-        const connection = await pool.getConnection(async (conn) => conn);
-
         let mailOptions = {
             from : process.env.EMAIL_USER, //TODO : 팀 이름 결정되면 수정
             to : userEmail,
@@ -166,10 +165,11 @@ exports.sendPw = async function (userEmail) {
         } else {
             return errResponse(baseResponse.USER_USEREMAIL_NOT_EXIST);
         };
-        connection.release();
     } catch (err) {
         logger.error(`sendTmpPw Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
+    } finally{
+        connection.release();
     }
 }
 
