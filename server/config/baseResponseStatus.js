@@ -44,14 +44,18 @@ module.exports = {
     POST_CONTENT_LENGTH : { "isSuccess": 0, "code": 2024, "message": "게시물 내용은 450자 미만으로 입력해주세요."},
     POST_STATUS_INACTIVE : {"isSuccess" : 0, "code": 2025, "message" : "이미 삭제된 게시물입니다. "},
 
+    //비밀번호 변경관련
+    UPDATE_PW_WRONG : {"isSuccess":false, "code" : 2026, "message": "비밀번호를 정확하게 입력해주세요." },
+
+
     // Response error(의미적 validation error)
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": 0, "code": 3001, "message":"중복된 이메일입니다." },
     SIGNUP_REDUNDANT_NICKNAME : { "isSuccess": 0, "code": 3002, "message":"중복된 닉네임입니다." },
 
-    SIGNIN_EMAIL_WRONG : { "isSuccess": 0, "code": 3003, "message": "아이디가 잘못 되었습니다." },
+    SIGNIN_EMAIL_WRONG : { "isSuccess": 0, "code": 3003, "message": "이메일이 잘못 되었습니다." },
     SIGNIN_PASSWORD_WRONG : { "isSuccess": 0, "code": 3004, "message": "비밀번호가 잘못 되었습니다." },
     SIGNIN_INACTIVE_ACCOUNT : { "isSuccess": 0, "code": 3005, "message": "비활성화 된 계정입니다. 고객센터에 문의해주세요." },
-    SIGNIN_WITHDRAWAL_ACCOUNT : { "isSuccess": 0, "code": 3006, "message": "탈퇴 된 계정입니다. 고객센터에 문의해주세요." },
+    SIGNIN_WITHDRAWAL_ACCOUNT : { "isSuccess": 0, "code": 3006, "message": "탈퇴된 계정입니다. 고객센터에 문의해주세요." },
 
     //Connection, Transaction 등의 서버 오류
     DB_ERROR : { "isSuccess": 0, "code": 4000, "message": "데이터 베이스 에러"},

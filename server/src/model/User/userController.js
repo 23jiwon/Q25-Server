@@ -42,10 +42,17 @@ exports.postUsers = async function (req, res) {
    }
 
    if(!password) {
+<<<<<<< HEAD
         return res.send(response(baseResponse.SIGNUP_PASSWORD_EMPTY));
     } else if(password.length > 30){
     return res.send(response(baseResponse.SIGNUP_PASSWORD_LENGTH));
     }
+=======
+          return res.send(response(baseResponse.SIGNUP_PASSWORD_EMPTY));
+     } else if(password.length > 30){
+          return res.send(response(baseResponse.SIGNUP_PASSWORD_LENGTH));
+     }
+>>>>>>> 11b1307a5565b9bbf3729b06a915e785552685e6
 
    const signUpResponse = await userService.createUser(
         nickName,
@@ -97,4 +104,15 @@ exports.sendTempPw = async function (req, res) {
    const sendPwResponse = await userService.sendPw(email);
 
    return res.send(sendPwResponse);
+};
+
+exports.patchPw = async function (req, res) {
+    /*
+         body : email //TODO: body값 수정된거 확인해야함!
+    */
+    const { userIdx, old_pw, new_pw } = req.body;
+
+   const patchPwResponse = await userService.patchPw(userIdx, old_pw, new_pw);
+   return res.send(patchPwResponse);
+
 };
