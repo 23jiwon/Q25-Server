@@ -57,12 +57,19 @@ exports.createUser = async function (nickName, email, password) {
 //로그인 수정필요 + 로그아웃 만들어야함
 exports.postSignIn = async function (email, password) {
 
-    try {
-        const emailRows = await userProvider.emailCheck(email); //이메일 확인
+    console.log(email, password)
 
+    try {
+        const emailRows = await userProvider.LoginCheck(email); //이메일 확인
+
+        console.log(emailRows)
+        if(emailRows === null){
+            return errResponse(baseResponse.SIGNIN_EMAIL_WRONG);
+        }
         if (emailRows[0].email != email) {
             return errResponse(baseResponse.SIGNIN_EMAIL_WRONG);
         }
+        console.log("이메일확인끝")
 
         const passwordRows = await userProvider.passwordCheck(email);
 
@@ -86,7 +93,12 @@ exports.postSignIn = async function (email, password) {
             { expiresIn: "30d", subject: "User" }
         );
 
-        return response(baseResponse.SUCCESS, token);
+        //토큰 저장
+        const savetoken = await userProvider.savetoken(userAccountRows[0].userIdx, token)
+
+        let loginres = { AT : token , userIdx : userAccountRows[0].userIdx}
+
+        return response(baseResponse.SUCCESS, loginres);
     } catch (err) {
         console.log(`App - postSignIn Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
@@ -156,5 +168,26 @@ exports.sendPw = async function (userEmail) {
     } catch (err) {
         logger.error(`sendTmpPw Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+//비밀번호 변경
+exports.patchPw = async function (userIdx, old_pw, new_pw) {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const PwRows = await userProvider.InsertPw(userIdx, old_pw, new_pw);
+
+    console.log(PwRows)
+    if(PwRows.old_pw === null){
+        return response(baseResponse.UPDATE_PW_WRONG);
+    }
+    try{
+
+        return response(baseResponse.SUCCESS, PwRows);
+
+    } catch (err) {
+        logger.error(`patchPw Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    } finally {
+        connection.release();
     }
 }

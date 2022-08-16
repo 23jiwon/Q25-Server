@@ -6,6 +6,7 @@ const recordService = require("../Record/recordService");
 const baseResponse = require("../../../config/baseResponseStatus");
 const {response, errResponse, resreturn} = require("../../../config/response");
 
+
 /*
     API NO.0
     API Name : Test API
@@ -57,15 +58,18 @@ exports.getCollection = async function (req,res) {
     return res.send(getCollectionResponse);
 };
 
-//질문리스트
+//질문리스트 -------------------------------------------------------------쿼리 못받아서 userIdx 강제입력
 exports.getQlist = async function (req,res) {
     /*
         body : userIdx, questionIdx
     */
-   const { userIdx } = req.body;
+
+        console.log(req)
+    let user = req.get('userIdx')
+   let userIdx = Math.round(user);
 
    const getQlistResponse = await recordService.getQlist(
-    userIdx, 
+    user, 
     );
 
     return res.send(getQlistResponse);

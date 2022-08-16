@@ -41,3 +41,27 @@ exports.accountCheck = async function (email) {
   connection.release();
   return accountCheckesult;
 };
+
+exports.LoginCheck = async function(email) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const LoginCheckResult = await userDao.selectLoginEmail(connection, email); 
+  connection.release();
+
+  return LoginCheckResult;
+};
+
+exports.savetoken = async function(userIdx, tokenIdx) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const savetokenResult = await userDao.InsertUserToken(connection, userIdx, tokenIdx); 
+  connection.release();
+
+  return savetokenResult;
+};
+
+exports.InsertPw = async function(userIdx, old_pw, new_pw) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const InsertPw = await userDao.InsertPw(connection, userIdx, old_pw, new_pw); 
+  connection.release();
+
+  return InsertPw;
+};
