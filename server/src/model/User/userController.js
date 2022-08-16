@@ -90,10 +90,6 @@ exports.sendTempPw = async function (req, res) {
    if(!email){
     return res.send(response(baseResponse.SIGNIN_EMAIL_EMPTY));
    }
-   //TODO : 이메일 형식 체크?
-//     if (!regexEmail.test(email))
-//         return res.send(response(baseResponse.SIGNUP_EMAIL_ERROR_TYPE));
-
    const sendPwResponse = await userService.sendPw(email);
 
    return res.send(sendPwResponse);

@@ -122,6 +122,15 @@ async function InsertPw(connection, userIdx, old_pw, new_pw){
     return selectNewPw;
 }
 
+async function updatePw(connection, randomPassword, nickName) {
+    const updatePwQuery = `
+        UPDATE christmas25.usertbl
+        SET password = ?
+        WHERE nickName = ?;
+    `;
+    const updatePwRow = await connection.query(updatePwQuery, [randomPassword, nickName]);
+    return updatePwRow;
+}
 
 module.exports = {
     insertUserInfo,
@@ -132,4 +141,5 @@ module.exports = {
     InsertUserToken,
     selectLoginEmail,
     InsertPw,
+    updatePw
 };

@@ -150,8 +150,8 @@ exports.sendPw = async function (userEmail) {
         console.log(`random password : ${randomPassword}`);
 
         const emailRows = await userProvider.emailCheck(userEmail);
-
-        console.log(`발신인 : ${process.env.EMAIL_USER}`);
+        const nickName = emailRows[0].nickName;
+        // console.log(`발신인 : ${process.env.EMAIL_USER}`);
         if (emailRows.length > 0){
             console.log(`수신인 : ${emailRows[0].nickName}`);
             transport.sendMail(mailOptions, function(err, info) {
@@ -161,6 +161,7 @@ exports.sendPw = async function (userEmail) {
                     //console.log(info);
                 }
             });
+            const newpw = await userDao.updatePw(connection, randomPassword, nickName);
             return response(baseResponse.SUCCESS);
         } else {
             return errResponse(baseResponse.USER_USEREMAIL_NOT_EXIST);
