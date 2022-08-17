@@ -1,5 +1,6 @@
 // 질문, 답변가져오기 (답은 null일수도있음)
 async function SelectQuestion(connection, userIdx,qNum) {
+    
     const selectQuestion = `
         SELECT questionIdx as qNum, content as qnacontent, CONCAT('http://localhost:3001/christmasQ25_asset/', questionImg) as qnaImg
         FROM christmas25.questiontbl
@@ -9,6 +10,7 @@ async function SelectQuestion(connection, userIdx,qNum) {
         selectQuestion,
         qNum
     );
+
 //DB수정해서 IDX 없애고 이메일넣던가해야함 --- 이거 답변도 보내야하지않나? 물어봐야함
     const selectAnswer = `
     SELECT answer
@@ -21,12 +23,22 @@ async function SelectQuestion(connection, userIdx,qNum) {
         userIdx]
     );
 
+    let answer =[];
+    if((selectAnswerRow[0].answer).length < 1){
+        let t = {answer : null};
+        answer.push(t);
+    }
+    else{
+        let t = {answer : selectAnswerRow[0].answer};
+        answer.push(t);
+    }
     /*
     question:
             {
             qNum : ”1”,
             qnalmg: ””,
-            qnacontent:” ”
+            qnacontent:” ”,
+            answer:""
             }
 
     */
@@ -35,10 +47,9 @@ async function SelectQuestion(connection, userIdx,qNum) {
         {
         qNum:selectquestionRow[0].qNum,
         qnaImg: selectquestionRow[0].qnaImg,
-        qnacontent:selectquestionRow[0].qnacontent
+        qnacontent:selectquestionRow[0].qnacontent,
+        answer:answer[0].answer
         }
-        
-
 
     return selectQARow;
 }

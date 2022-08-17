@@ -209,6 +209,7 @@ exports.logout = async function(userIdx) {
             return errResponse(baseResponse.DB_ERROR);
         }
         console.log("로그아웃 완료");
+        
         return response(baseResponse.SUCCESS);
     } catch (err) {
         return errResponse(baseResponse.DB_ERROR);
