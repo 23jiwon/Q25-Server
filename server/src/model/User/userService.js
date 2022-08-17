@@ -71,6 +71,11 @@ exports.postSignIn = async function (email, password) {
         if (emailRows[0].email != email) {
             return errResponse(baseResponse.SIGNIN_EMAIL_WRONG);
         }
+        // 탈퇴된 계정인지 확인
+        const checkStatusRows = await userProvider.checkStatus(email);
+        if(checkStatusRows){
+            return errResponse(baseResponse.SIGNIN_INACTIVE_ACCOUNT);
+        }
         console.log("이메일확인끝")
 
         const passwordRows = await userProvider.passwordCheck(email);

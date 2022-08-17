@@ -169,7 +169,15 @@ async function deletetoken(connection, userIdx){
 };
 
 
-
+async function checkStatus(connection, email) {
+    const checkStatusQuery = `
+        SELECT userIdx
+        FROM usertbl
+        WHERE email = ?
+    `;
+    const checkStatusQueryRow = await connection.query(checkStatusQuery, email);
+    return checkStatusQueryRow;
+}
 module.exports = {
     insertUserInfo,
     selectUserEmail,
@@ -182,5 +190,6 @@ module.exports = {
     updatePw,
     accountCheck,
     withdrawAccount,
-    deletetoken
+    deletetoken,
+    checkStatus
 };

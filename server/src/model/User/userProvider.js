@@ -79,3 +79,10 @@ exports.logout = async function (userIdx) {
   connection.release();
   return logoutResult;
 }
+
+exports.checkStatus = async function(email) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const checkStatusResult = await userDao.checkStatus(connection, email);
+  connection.release();
+  return checkStatusResult;
+}
