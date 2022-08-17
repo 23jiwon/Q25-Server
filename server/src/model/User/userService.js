@@ -143,9 +143,9 @@ exports.sendPw = async function (userEmail) {
         let mailOptions = {
             from : process.env.EMAIL_USER,
             to : userEmail,
-            subject : '[TEST] ChristmasQ25-Rudolf에서 임시 비밀번호를 알려드립니다',//TODO : 팀 이름 결정되면 수정
+            subject : 'Rudolf에서 임시 비밀번호를 알려드립니다',
             html : `
-            <h1>ChristmasQ25에서 임시 비밀번호를 알려드립니다.</h1><br>
+            <h1>Rudolf에서 임시 비밀번호를 알려드립니다.</h1><br>
             <h3> 임시 비밀번호 : `+randomPassword+`</h3>
             <br><h3>임시 비밀번호로 로그인 하신 후, 반드시 비밀번호를 수정해 주세요.</h3>
             `
