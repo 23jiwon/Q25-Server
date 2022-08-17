@@ -72,3 +72,10 @@ exports.checkAccout = async function (email, password) {
   connection.release();
   return checkAccoutResult;
 }
+
+exports.logout = async function (userIdx) {
+  const connection = await pool.getConnection(async (conn) => conn);
+  const logoutResult = await userDao.deletetoken(connection, userIdx);
+  connection.release();
+  return logoutResult;
+}
