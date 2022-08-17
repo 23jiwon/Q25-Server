@@ -171,7 +171,7 @@ async function deletetoken(connection, userIdx){
 
 async function checkStatus(connection, email) {
     const checkStatusQuery = `
-        SELECT userIdx
+        SELECT userStatus
         FROM usertbl
         WHERE email = ?
     `;
