@@ -73,7 +73,8 @@ exports.postSignIn = async function (email, password) {
         }
         // 탈퇴된 계정인지 확인
         const checkStatusRows = await userProvider.checkStatus(email);
-        if(checkStatusRows){
+        console.log(checkStatusRows[0][0].userStatus);
+        if(checkStatusRows[0][0].userStatus == 'INACTIVE'){
             return errResponse(baseResponse.SIGNIN_INACTIVE_ACCOUNT);
         }
         console.log("이메일확인끝")
