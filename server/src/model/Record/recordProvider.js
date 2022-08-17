@@ -8,6 +8,7 @@ exports.getQuestion = async function(userIdx,qNum) {
     const connection = await pool.getConnection(async (conn) => conn);
     const questionResult = await recordDao.SelectQuestion(connection, userIdx,qNum); 
     connection.release();
+    
 
     return questionResult;
 };

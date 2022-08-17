@@ -17,10 +17,10 @@ exports.getQuestion = async function (req,res) {
     /*
         body : {userIdx, questionIdx}
     */
-   const {userIdx, questionIdx} = req.query;
+   const {userIdx, qNum} = req.query;
    const getQuestionResponse = await recordService.getQuestion(
     userIdx,
-    questionIdx
+    qNum
     );
 
     console.log(getQuestionResponse)
@@ -49,12 +49,10 @@ exports.getCollection = async function (req,res) {
     /*
         body : userIdx, questionIdx
     */
-   console.log("통신")
    const { userIdx } = req.query;
-   let user = 27
 
    const getCollectionResponse = await recordService.getCollection(
-    user, 
+    userIdx, 
     );
     console.log(getCollectionResponse);
     return res.send(getCollectionResponse);
