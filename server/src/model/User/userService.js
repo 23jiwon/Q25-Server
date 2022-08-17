@@ -141,9 +141,9 @@ exports.sendPw = async function (userEmail) {
     const connection = await pool.getConnection(async (conn) => conn);
     try{
         let mailOptions = {
-            from : process.env.EMAIL_USER, //TODO : 팀 이름 결정되면 수정
+            from : process.env.EMAIL_USER,
             to : userEmail,
-            subject : '[TEST] ChristmasQ25에서 임시 비밀번호를 알려드립니다',//TODO : 팀 이름 결정되면 수정
+            subject : '[TEST] ChristmasQ25-Rudolf에서 임시 비밀번호를 알려드립니다',//TODO : 팀 이름 결정되면 수정
             html : `
             <h1>ChristmasQ25에서 임시 비밀번호를 알려드립니다.</h1><br>
             <h3> 임시 비밀번호 : `+randomPassword+`</h3>
