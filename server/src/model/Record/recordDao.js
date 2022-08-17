@@ -129,8 +129,8 @@ async function getTimeCriteria(connection, questionIdx){
         WHERE questionIdx = ?;
     `;
 
-    const TimeCriteria = await connection.query(getTimeCriteria, questionIdx);
-    return TimeCriteria;
+    const TimeCriteriaRow = await connection.query(getTimeCriteriaQuery, questionIdx);
+    return TimeCriteriaRow;
 };
 
 //시간 돼서 질문 열리면 opened=1로 변경
@@ -332,7 +332,17 @@ console.log(selectCollectionRow)
 }
 
 
-
+async function getUserQIdx(connection, userIdx, questionIdx) {
+    console.log("userIdx, questionIdx :", userIdx, questionIdx);
+    const getUserQIdxQuery = `
+        SELECT userQIdx
+        FROM christmas25.pagetbl
+        WHERE userIdx = ? and questionIdx = ?;
+    `;
+    const getUserQIdxRow = await connection.query(getUserQIdxQuery, [userIdx, questionIdx]);
+    console.log("getUserQIdxRow :", getUserQIdxRow);
+    return getUserQIdxRow;
+}
 
 
 module.exports = {
@@ -342,5 +352,6 @@ module.exports = {
     getTimeCriteria,
     updateOpenStatus,
     SelectCollection,
-    SelectQlist
+    SelectQlist,
+    getUserQIdx
 };

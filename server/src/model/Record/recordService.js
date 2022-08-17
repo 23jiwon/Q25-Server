@@ -14,17 +14,20 @@ const { Console } = require("console");
 
 
 // 선물상자 누르면 보내줄 정보 - email qnum은 다른걸로 바꾸기
-exports.getQuestion = async function (userIdx,qNum) {
+exports.getQuestion = async function (userIdx,questionIdx) {
     try{
         // 이메일에 있는 질문 번호 가져오기
         const connection = await pool.getConnection(async (conn) => conn);
-        const questionRows = await recordProvider.getQuestion(userIdx,qNum);
+        const questionRows = await recordProvider.getQuestion(userIdx,questionIdx);
 
         //시간 비교
         const currentTime = new Date();
         console.log(`current Date : ${currentTime}`);
-        const timeCriteria = await postDao.getTimeCriteria(connection, questionIdx);
-        
+        const timeCriteria = await recordDao.getTimeCriteria(connection, questionIdx);
+        console.log("timeCriteria : ", timeCriteria);
+        const userQIdx = await recordDao.getUserQIdx(connection, userIdx, questionIdx);
+        console.log("userQIdx : ", userQIdx);
+
         if (timeCriteria >= currentTime){
             const updateOpenStatusResult = await recordDao.updateOpenStatus(connection, userQIdx);
         }
