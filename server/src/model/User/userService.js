@@ -197,11 +197,12 @@ exports.patchPw = async function (userIdx, old_pw, new_pw) {
 exports.logout = async function(userIdx) {
     const connection = await pool.getConnection(async (conn) => conn);
     try{
-        const logoutRows = await userProviser.logout(userIdx);
-        console.log(logoutRows);
-        // if(logoutRows != "성공")
-
-        
+        const logoutRows = await userProvider.logout(userIdx);
+        if(logoutRows != "성공")
+        {
+            return errResponse(baseResponse.DB_ERROR);
+        }
+        console.log("로그아웃 완료");
         return response(baseResponse.SUCCESS);
     } catch (err) {
         return errResponse(baseResponse.DB_ERROR);

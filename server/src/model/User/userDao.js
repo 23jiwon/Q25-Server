@@ -155,6 +155,21 @@ async function withdrawAccount(connection, userIdx) {
     return withdrawAccoutRows;
 }
 
+
+//로그아웃
+async function deletetoken(connection, userIdx){
+    const deletetokenQuery = `
+        DELETE FROM christmas25.tokentbl
+        WHERE userIdx = ?;
+    `;
+
+    const tokenrRow = await connection.query(deletetokenQuery, userIdx);
+    let res = "성공";
+    return res;
+};
+
+
+
 module.exports = {
     insertUserInfo,
     selectUserEmail,
@@ -166,5 +181,6 @@ module.exports = {
     InsertPw,
     updatePw,
     accountCheck,
-    withdrawAccount
+    withdrawAccount,
+    deletetoken
 };

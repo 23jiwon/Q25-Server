@@ -113,8 +113,8 @@ exports.logout = async function (req, res) {
      /*
           body : userIdx
      */
-    console.log(req,body);
-    const {userIdx} = req.body;
+    console.log(req.body);
+    const { userIdx } = req.body;
     const logoutResponse = await userService.logout(userIdx);
     return res.send(logoutResponse);
 }
