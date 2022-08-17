@@ -24,7 +24,11 @@ async function SelectQuestion(connection, userIdx,qNum) {
     );
 
     let answer =[];
-    if((selectAnswerRow[0].answer).length < 1){
+    if(selectAnswerRow[0].answer === null){
+        let t = {answer : null};
+        answer.push(t);
+    }
+    else if((selectAnswerRow[0].answer).length < 1){
         let t = {answer : null};
         answer.push(t);
     }
