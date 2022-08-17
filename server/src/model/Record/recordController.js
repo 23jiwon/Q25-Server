@@ -15,12 +15,12 @@ const {response, errResponse, resreturn} = require("../../../config/response");
 */
 exports.getQuestion = async function (req,res) {
     /*
-        body : {userIdx,qNum}
+        body : {userIdx, questionIdx}
     */
-   const {userIdx,qNum} = req.body;
+   const {userIdx, questionIdx} = req.query;
    const getQuestionResponse = await recordService.getQuestion(
     userIdx,
-    qNum
+    questionIdx
     );
 
     console.log(getQuestionResponse)
