@@ -26,9 +26,10 @@ exports.patchRecord = async function(answer,userIdx,qNum) {
 exports.getCollection = async function(userIdx) {
 
     const connection = await pool.getConnection(async (conn) => conn);
+    console.log("----------------------dao전")
     const Collection = await recordDao.SelectCollection(connection, userIdx); 
     connection.release();
-
+    console.log("provider에서 collection:", Collection)
     return Collection;
 };
 
