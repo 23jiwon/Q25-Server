@@ -7,10 +7,12 @@ const { logger } = require("../../../config/winston");
 exports.emailCheck = async function(email) {
   const connection = await pool.getConnection(async (conn) => conn);
   const emailCheckResult = await userDao.selectUserEmail(connection, email); 
+  console.log("provider 에서 결과 : ", emailCheckResult);
   connection.release();
 
   return emailCheckResult;
 };
+
 
 exports.passwordCheck = async function (email) {
   const connection = await pool.getConnection(async (conn) => conn);
