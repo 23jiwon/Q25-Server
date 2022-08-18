@@ -174,6 +174,7 @@ async function SelectCollection(connection, userIdx) {
         selectQuestion,
         userIdx
     );
+
     //답변정보
     const selectAnswer = `
     SELECT questionIdx as qNum, answer
@@ -189,6 +190,7 @@ async function SelectCollection(connection, userIdx) {
     let newQ = []
     for(let i = 0 ; i < selectAnswerRow.length ; i++){
         let num = selectAnswerRow[i].qNum
+        console.log("num:", num);
         let t = {qnacontent : selectQuestionRow[num].qnacontent}
         newQ.push(t);
     }
@@ -252,11 +254,12 @@ async function SelectQlist(connection, userIdx) {
         selectQuestion,
         userIdx
     );
+
     //답변정보
     const selectAnswer = `
     SELECT questionIdx as qNum, opened, answer
     FROM christmas25.pagetbl
-    WHERE userIdx = ? 
+    WHERE userIdx = ?
     `;
     const [selectAnswerRow] = await connection.query(
         selectAnswer,
@@ -277,10 +280,10 @@ async function SelectQlist(connection, userIdx) {
 
     //이미지 정보
     const selectImg = `
-    SELECT  CONCAT('http://localhost:5000/christmasQ25_asset/', imageUrl) as stampImg
+    SELECT  CONCAT('http://localhost:5000/christmasQ25_asset', imageUrl) as stampImg 
     FROM christmas25.imagetbl
     WHERE imageIdx = 2
-    `;
+    `;//imageUrl에 /가 포함되어 있어 asset뒤의 / 지웠습니다
     const [selectImgRow] = await connection.query(
         selectImg
     );
