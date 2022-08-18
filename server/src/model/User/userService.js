@@ -151,15 +151,15 @@ exports.sendPw = async function (userEmail) {
             `
         };// TODO : 멘트 변경
 
-        // console.log(`${userEmail}로 메일 발송을 시도합니다.`);
-        // console.log(`random password : ${randomPassword}`);
+        console.log(`${userEmail}로 메일 발송을 시도합니다.`);
+        console.log(`random password : ${randomPassword}`);
 
         const emailRows = await userProvider.emailCheck(userEmail);
         console.log("emailRows:", emailRows);
         
         // console.log(`발신인 : ${process.env.EMAIL_USER}`);
         if (emailRows.length > 0){
-            // console.log(`수신인 : ${emailRows[0].nickName}`);
+            console.log(`수신인 : ${emailRows[0].nickName}`);
             transport.sendMail(mailOptions, function(err, info) {
                 if (err){
                     console.log(err);
