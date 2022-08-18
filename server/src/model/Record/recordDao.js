@@ -176,10 +176,11 @@ async function SelectCollection(connection, userIdx) {
     );
 
     //답변정보
+    
     const selectAnswer = `
     SELECT questionIdx as qNum, answer
     FROM christmas25.pagetbl
-    WHERE userIdx = ? and answer is not null
+    WHERE userIdx = ? and answer is not null and answer != ''
     `;
     const [selectAnswerRow] = await connection.query(
         selectAnswer,
@@ -190,7 +191,6 @@ async function SelectCollection(connection, userIdx) {
     let newQ = []
     for(let i = 0 ; i < selectAnswerRow.length ; i++){
         let num = selectAnswerRow[i].qNum
-        console.log("num:", num);
         let t = {qnacontent : selectQuestionRow[num].qnacontent}
         newQ.push(t);
     }
