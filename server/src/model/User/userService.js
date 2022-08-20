@@ -64,7 +64,6 @@ exports.postSignIn = async function (email, password) {
     try {
         const emailRows = await userProvider.LoginCheck(email); //이메일 확인
 
-        console.log(emailRows)
         if(emailRows === null){
             return errResponse(baseResponse.SIGNIN_EMAIL_WRONG);
         }
@@ -77,7 +76,7 @@ exports.postSignIn = async function (email, password) {
         if(checkStatusRows[0][0].userStatus == 'INACTIVE'){
             return errResponse(baseResponse.SIGNIN_INACTIVE_ACCOUNT);
         }
-        console.log("이메일확인끝")
+
 
         const passwordRows = await userProvider.passwordCheck(email);
         if (passwordRows[0].password != password) {
@@ -90,22 +89,35 @@ exports.postSignIn = async function (email, password) {
         //일치하면 사용중인 회원인지 탈퇴한 회원인지 확인
         const userAccountRows = await userProvider.accountCheck(email);
 
-        if (userAccountRows[0].userstatus === "INACTIVE") {
+        if (userAccountRows[0].userStatus === "INACTIVE") {
             return errResponse(baseResponse.SIGNIN_INACTIVE_ACCOUNT);
         } 
+        const connection = await pool.getConnection(async (conn) => conn);
+        const istokenResult = await userDao.selecttoken(connection, userAccountRows[0].userIdx);
+        connection.release();
+ 
+        if (istokenResult.length < 1){
+            console.log("토큰존재x")
+            let token = jwt.sign(
+                { userIdx: userAccountRows[0].userIdx },
+                secretkey,
+                { expiresIn: "30d", subject: "User" }
+            );
+    
+            //토큰 저장
+            const savetoken = await userProvider.savetoken(userAccountRows[0].userIdx, token)
+    
+            let loginres = { AT : token , userIdx : userAccountRows[0].userIdx}
+            return response(baseResponse.SUCCESS, loginres);
 
-        let token = jwt.sign(
-            { userIdx: userAccountRows[0].userIdx },
-            secretkey,
-            { expiresIn: "30d", subject: "User" }
-        );
+        }
+        else {
+            console.log("토큰존재o")
+            let loginres = { AT : istokenResult[0].token , userIdx : userAccountRows[0].userIdx}
+            return response(baseResponse.SUCCESS, loginres);
 
-        //토큰 저장
-        const savetoken = await userProvider.savetoken(userAccountRows[0].userIdx, token)
+        } 
 
-        let loginres = { AT : token , userIdx : userAccountRows[0].userIdx}
-
-        return response(baseResponse.SUCCESS, loginres);
     } catch (err) {
         console.log(`App - postSignIn Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);

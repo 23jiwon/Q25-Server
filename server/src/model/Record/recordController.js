@@ -58,7 +58,7 @@ exports.getCollection = async function (req,res) {
     return res.send(getCollectionResponse);
 };
 
-//질문리스트 -------------------------------------------------------------쿼리 못받아서 userIdx 강제입력
+//질문리스트 ------
 exports.getQlist = async function (req,res) {
     /*
         body : userIdx, questionIdx
