@@ -341,8 +341,6 @@ async function SelectQlist(connection, userIdx) {
         stampImg: selectImgRow[0].stampImg,
         question: Qlist
         }
-        
-console.log(selectCollectionRow)
 
     return selectCollectionRow;
 }

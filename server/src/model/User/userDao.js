@@ -178,6 +178,19 @@ async function checkStatus(connection, email) {
     const checkStatusQueryRow = await connection.query(checkStatusQuery, email);
     return checkStatusQueryRow;
 }
+
+//토큰셀렉트
+async function selecttoken(connection, userIdx) {
+    const selecttokenQuery = `
+        SELECT tokenIdx
+        FROM tokentbl
+        WHERE userIdx = ?
+    `;
+    const [selecttokenQueryRow] = await connection.query(selecttokenQuery, userIdx);
+    return selecttokenQueryRow;
+}
+
+
 module.exports = {
     insertUserInfo,
     selectUserEmail,
@@ -191,5 +204,6 @@ module.exports = {
     accountCheck,
     withdrawAccount,
     deletetoken,
-    checkStatus
+    checkStatus,
+    selecttoken
 };
