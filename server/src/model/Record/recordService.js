@@ -21,14 +21,18 @@ exports.getQuestion = async function (userIdx,questionIdx) {
         const questionRows = await recordProvider.getQuestion(userIdx,questionIdx);
 
         //시간 비교
-        const currentTime = new Date();
-        console.log(`current Date : ${currentTime}`);
-        const timeCriteria = await recordDao.getTimeCriteria(connection, questionIdx);
-        console.log("timeCriteria : ", timeCriteria);
-        const userQIdx = await recordDao.getUserQIdx(connection, userIdx, questionIdx);
-        console.log("userQIdx : ", userQIdx);
+        const current = new Date();
+        const currentTime = current.getTime();
+        console.log(`current Time :`,currentTime);
 
-        if (timeCriteria >= currentTime){
+        const timeresult = await recordDao.getTimeCriteria(connection, questionIdx);
+        const timeCriteria = timeresult[0][0].openTime.getTime();
+        console.log("timeCriteria :", timeCriteria)
+
+        const userQIdx = await recordDao.getUserQIdx(connection, userIdx, questionIdx);
+        console.log("userQIdx : ", userQIdx[0][0].userQIdx);
+
+        if (timeCriteria <= currentTime){
             console.log("오픈 가능");
             const updateOpenStatusResult = await recordDao.updateOpenStatus(connection, userQIdx);
         }else {
