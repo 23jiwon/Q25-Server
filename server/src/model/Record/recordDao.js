@@ -135,41 +135,41 @@ async function addNewRows(connection, addNewRowsParams){
     return addNewRowsRow;
 };
 
-//기준 기간 가져오기
-async function getTimeCriteria(connection, questionIdx){
-    const getTimeCriteriaQuery = `
-        SELECT openTime
-        FROM questionTBL
-        WHERE questionIdx = ?;
-    `;
+// 기준 기간 가져오기
+// async function getTimeCriteria(connection, questionIdx){
+//     const getTimeCriteriaQuery = `
+//         SELECT openTime
+//         FROM questionTBL
+//         WHERE questionIdx = ?;
+//     `;
 
-    const TimeCriteriaRow = await connection.query(getTimeCriteriaQuery, questionIdx);
-    return TimeCriteriaRow;
-};
+//     const TimeCriteriaRow = await connection.query(getTimeCriteriaQuery, questionIdx);
+//     return TimeCriteriaRow;
+// };
 
-//시간 돼서 질문 열리면 opened=1로 변경
-async function updateOpenStatus(connection, userQIdx) {
+// opened=1
+async function updateOpenStatus(connection, qnum) {
     const updateOpenStatusQuery = `
-        UPDATE pageTBL
-        SET opened = '1'
-        WHERE userQIdx = ?;
+        UPDATE pageTBL p, questiontbl q
+        SET p.opened = '1'
+        WHERE p.questionIdx = ?;
     `;
 
-    const updateOpenStatusRow = await connection.query(updateOpenStatusQuery, userQIdx);
-
-    return updateOpenStatusRow[0];
+    const updateOpenStatusRow = await connection.query(updateOpenStatusQuery, qnum);
+    
+    return updateOpenStatusRow;
 };
 
-async function getOpened(connection, userQIdx) {
-    const getOpenedQuery = `
-        SELECT opened
-        FROM pagetbl
-        WHERE userQIdx = ?;
-    `;
-    const getOpenedRows = await connection.query(getOpenedQuery, userQIdx);
+// async function getOpened(connection, userQIdx) {
+//     const getOpenedQuery = `
+//         SELECT opened
+//         FROM pagetbl
+//         WHERE userQIdx = ?;
+//     `;
+//     const getOpenedRows = await connection.query(getOpenedQuery, userQIdx);
 
-    return getOpenedRows
-}
+//     return getOpenedRows
+// }
 
 //질문 모아보기 답변한것만
 async function SelectCollection(connection, userIdx) {
@@ -260,8 +260,7 @@ async function SelectQlist(connection, userIdx) {
         FROM christmas25.questiontbl
     `;
     const [selectQuestionRow] = await connection.query(
-        selectQuestion,
-        userIdx
+        selectQuestion
     );
 
     //답변정보
@@ -374,9 +373,9 @@ module.exports = {
     SelectQuestion,
     InsertAnswer,
     addNewRows,
-    getTimeCriteria,
+    // getTimeCriteria,
     updateOpenStatus,
-    getOpened,
+    // getOpened,
     SelectCollection,
     SelectQlist,
     getUserQIdx

@@ -11,40 +11,20 @@ const {errResponse} = require("../../../config/response");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { Console } = require("console");
-
+const schedule = require("node-schedule");
+const { get } = require("http");
 
 // 선물상자 누르면 보내줄 정보 - email qnum은 다른걸로 바꾸기
 exports.getQuestion = async function (userIdx,questionIdx) {
     const connection = await pool.getConnection(async (conn) => conn);
+    // 이메일에 있는 질문 번호 가져오기
     try{
-        //시간 비교
-        const current = new Date();
-        const currentTime = current.getTime();
-        console.log(`current Time :`,currentTime);
-
-        const timeresult = await recordDao.getTimeCriteria(connection, questionIdx);
-        const timeCriteria = timeresult[0][0].openTime.getTime();
-        console.log("timeCriteria :", timeCriteria)
-
-        let userQIdx = await recordDao.getUserQIdx(connection, userIdx, questionIdx);
-        userQIdx = userQIdx[0][0].userQIdx
-
-        if (timeCriteria <= currentTime){
-            console.log("오픈 가능");
-            const updateOpenStatusResult = await recordDao.updateOpenStatus(connection, userQIdx);
-        }else {
-            console.log("오픈 불가");
-            return response(baseResponse.NOT_YET_TIME)
-        }
-        // 이메일에 있는 질문 번호 가져오기
-        console.log("userQIdx :", userQIdx);
-        const openedValue = await recordDao.getOpened(connection, userQIdx);
-        console.log("openedValue: ", openedValue[0][0].opened);
-
+    //     let userQIdx = await recordDao.getUserQIdx(connection, userIdx, questionIdx);
+    //      userQIdx = userQIdx[0][0].userQIdx
         const questionRows = await recordProvider.getQuestion(userIdx,questionIdx);
+        console.log(questionRows)
 
         return response(baseResponse.SUCCESS,questionRows);
-        // console.log(questionRows)
     } catch (err){
         logger.error(`getQuestion Service error\n : ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
@@ -96,8 +76,9 @@ exports.getCollection = async function (userIdx) {
 exports.getQlist = async function (userIdx) {
     try{
         // 선물상자 25개 출력
-        const getQlistRows = await recordProvider.getQlistRows(userIdx);
         const connection = await pool.getConnection(async (conn) => conn);
+
+        const getQlistRows = await recordProvider.getQlistRows(connection, userIdx);
         connection.release();
 
 
@@ -109,3 +90,32 @@ exports.getQlist = async function (userIdx) {
     }
 
 };
+
+// opened 일괄 변경
+module.exports = {
+    updateOpened: () => {
+        schedule.scheduleJob('30 * * * * *', async()=>{
+            const connection = await pool.getConnection(async (conn) => conn);
+
+            let today_date  = new Date();
+            today_date = today_date.getDate();
+
+            const updateQuestionList = [];
+            for(var i=1; i<26; i++){
+                if (i<=today_date){
+                    updateQuestionList.push(i);
+                }
+            }
+            // console.log("updateQuestionList:", updateQuestionList);
+            for(var qnum in updateQuestionList){
+                const updateOpenStatusResult = await recordDao.updateOpenStatus(connection, qnum+1);
+            }
+            console.log("opened update 완료")
+            
+            //
+            connection.release();
+        });
+        // updateOpened.cancel(); //schedule 취소
+        }
+}
+

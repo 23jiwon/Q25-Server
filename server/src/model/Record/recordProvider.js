@@ -33,11 +33,9 @@ exports.getCollection = async function(userIdx) {
     return Collection;
 };
 
-exports.getQlistRows = async function(userIdx) {
+exports.getQlistRows = async function(connection, userIdx) {
 
-    const connection = await pool.getConnection(async (conn) => conn);
     const Qlist = await recordDao.SelectQlist(connection, userIdx); 
-    connection.release();
 
     return Qlist;
 };

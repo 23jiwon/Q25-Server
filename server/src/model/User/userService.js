@@ -15,6 +15,7 @@ const express = require('express');
 require("dotenv").config();
 const secretkey=process.env.JWT_SECRET_KEY;
 
+
 // 회원가입
 exports.createUser = async function (nickName, email, password) {
     try{
@@ -95,6 +96,9 @@ exports.postSignIn = async function (email, password) {
         } 
         const connection = await pool.getConnection(async (conn) => conn);
         const istokenResult = await userDao.selecttoken(connection, userAccountRows[0].userIdx);
+
+        
+
         connection.release();
  
         if (istokenResult.length < 1){
@@ -118,6 +122,7 @@ exports.postSignIn = async function (email, password) {
             return response(baseResponse.SUCCESS, loginres);
 
         } 
+        
 
     } catch (err) {
         console.log(`App - postSignIn Service error\n: ${err.message}`);
