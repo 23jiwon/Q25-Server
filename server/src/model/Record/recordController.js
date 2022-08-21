@@ -23,7 +23,6 @@ exports.getQuestion = async function (req,res) {
     qNum
     );
 
-    console.log(getQuestionResponse)
     return res.send(getQuestionResponse);
 };
 

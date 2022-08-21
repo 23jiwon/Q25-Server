@@ -17,10 +17,6 @@ const { Console } = require("console");
 exports.getQuestion = async function (userIdx,questionIdx) {
     const connection = await pool.getConnection(async (conn) => conn);
     try{
-        // 이메일에 있는 질문 번호 가져오기
-        
-        const questionRows = await recordProvider.getQuestion(userIdx,questionIdx);
-
         //시간 비교
         const current = new Date();
         const currentTime = current.getTime();
@@ -30,17 +26,24 @@ exports.getQuestion = async function (userIdx,questionIdx) {
         const timeCriteria = timeresult[0][0].openTime.getTime();
         console.log("timeCriteria :", timeCriteria)
 
-        const userQIdx = await recordDao.getUserQIdx(connection, userIdx, questionIdx);
-        console.log("userQIdx : ", userQIdx[0][0].userQIdx);
+        let userQIdx = await recordDao.getUserQIdx(connection, userIdx, questionIdx);
+        userQIdx = userQIdx[0][0].userQIdx
 
         if (timeCriteria <= currentTime){
             console.log("오픈 가능");
             const updateOpenStatusResult = await recordDao.updateOpenStatus(connection, userQIdx);
-            return response(baseResponse.SUCCESS,questionRows);
         }else {
             console.log("오픈 불가");
             return response(baseResponse.NOT_YET_TIME)
         }
+        // 이메일에 있는 질문 번호 가져오기
+        console.log("userQIdx :", userQIdx);
+        const openedValue = await recordDao.getOpened(connection, userQIdx);
+        console.log("openedValue: ", openedValue[0][0].opened);
+
+        const questionRows = await recordProvider.getQuestion(userIdx,questionIdx);
+
+        return response(baseResponse.SUCCESS,questionRows);
         // console.log(questionRows)
     } catch (err){
         logger.error(`getQuestion Service error\n : ${err.message}`);

@@ -160,6 +160,17 @@ async function updateOpenStatus(connection, userQIdx) {
     return updateOpenStatusRow[0];
 };
 
+async function getOpened(connection, userQIdx) {
+    const getOpenedQuery = `
+        SELECT opened
+        FROM pagetbl
+        WHERE userQIdx = ?;
+    `;
+    const getOpenedRows = await connection.query(getOpenedQuery, userQIdx);
+
+    return getOpenedRows
+}
+
 //질문 모아보기 답변한것만
 async function SelectCollection(connection, userIdx) {
     console.log("----------------이게왜 안나와???????????????userIdx :", userIdx);
@@ -365,6 +376,7 @@ module.exports = {
     addNewRows,
     getTimeCriteria,
     updateOpenStatus,
+    getOpened,
     SelectCollection,
     SelectQlist,
     getUserQIdx
