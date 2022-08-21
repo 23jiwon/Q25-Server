@@ -77,7 +77,7 @@ exports.postSignIn = async function (email, password) {
         if(checkStatusRows[0][0].userStatus == 'INACTIVE'){
             return errResponse(baseResponse.SIGNIN_INACTIVE_ACCOUNT);
         }
-        console.log("이메일확인끝")
+
 
         const passwordRows = await userProvider.passwordCheck(email);
         if (passwordRows[0].password != password) {
@@ -90,22 +90,35 @@ exports.postSignIn = async function (email, password) {
         //일치하면 사용중인 회원인지 탈퇴한 회원인지 확인
         const userAccountRows = await userProvider.accountCheck(email);
 
-        if (userAccountRows[0].userstatus === "INACTIVE") {
+        if (userAccountRows[0].userStatus === "INACTIVE") {
             return errResponse(baseResponse.SIGNIN_INACTIVE_ACCOUNT);
         } 
+        const connection = await pool.getConnection(async (conn) => conn);
+        const istokenResult = await userDao.selecttoken(connection, userAccountRows[0].userIdx);
+        connection.release();
+ 
+        if (istokenResult.length < 1){
+            console.log("토큰존재x")
+            let token = jwt.sign(
+                { userIdx: userAccountRows[0].userIdx },
+                secretkey,
+                { expiresIn: "30d", subject: "User" }
+            );
+    
+            //토큰 저장
+            const savetoken = await userProvider.savetoken(userAccountRows[0].userIdx, token)
+    
+            let loginres = { AT : token , userIdx : userAccountRows[0].userIdx}
+            return response(baseResponse.SUCCESS, loginres);
 
-        let token = jwt.sign(
-            { userIdx: userAccountRows[0].userIdx },
-            secretkey,
-            { expiresIn: "30d", subject: "User" }
-        );
+        }
+        else {
+            console.log("토큰존재o")
+            let loginres = { AT : istokenResult[0].token , userIdx : userAccountRows[0].userIdx}
+            return response(baseResponse.SUCCESS, loginres);
 
-        //토큰 저장
-        const savetoken = await userProvider.savetoken(userAccountRows[0].userIdx, token)
+        } 
 
-        let loginres = { AT : token , userIdx : userAccountRows[0].userIdx}
-
-        return response(baseResponse.SUCCESS, loginres);
     } catch (err) {
         console.log(`App - postSignIn Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
@@ -143,7 +156,7 @@ exports.sendPw = async function (userEmail) {
         let mailOptions = {
             from : process.env.EMAIL_USER,
             to : userEmail,
-            subject : 'Rudolf에서 임시 비밀번호를 알려드립니다',//TODO : 팀 이름 결정되면 수정
+            subject : 'Rudolf에서 임시 비밀번호를 알려드립니다',
             html : `
             <h1>Rudolf에서 임시 비밀번호를 알려드립니다.</h1><br>
             <h3> 임시 비밀번호 : `+randomPassword+`</h3>
@@ -151,15 +164,15 @@ exports.sendPw = async function (userEmail) {
             `
         };// TODO : 멘트 변경
 
-        // console.log(`${userEmail}로 메일 발송을 시도합니다.`);
-        // console.log(`random password : ${randomPassword}`);
+        console.log(`${userEmail}로 메일 발송을 시도합니다.`);
+        console.log(`random password : ${randomPassword}`);
 
         const emailRows = await userProvider.emailCheck(userEmail);
         // console.log("emailRows:", emailRows);
         
         // console.log(`발신인 : ${process.env.EMAIL_USER}`);
         if (emailRows.length > 0){
-            // console.log(`수신인 : ${emailRows[0].nickName}`);
+            console.log(`수신인 : ${emailRows[0].nickName}`);
             transport.sendMail(mailOptions, function(err, info) {
                 if (err){
                     console.log(err);

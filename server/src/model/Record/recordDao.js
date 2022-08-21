@@ -47,13 +47,12 @@ async function SelectQuestion(connection, userIdx,qNum) {
 
     */
  
-    let selectQARow = 
-        {
-        qNum:selectquestionRow[0].qNum,
-        qnaImg: selectquestionRow[0].qnaImg,
-        qnacontent:selectquestionRow[0].qnacontent,
-        answer:answer[0].answer
-        }
+    let selectQARow = {
+    qNum:selectquestionRow[0].qNum,
+    qnaImg: selectquestionRow[0].qnaImg,
+    qnacontent:selectquestionRow[0].qnacontent,
+    answer:answer[0].answer
+    }
 
     return selectQARow;
 }
@@ -163,7 +162,7 @@ async function updateOpenStatus(connection, userQIdx) {
 
 //질문 모아보기 답변한것만
 async function SelectCollection(connection, userIdx) {
-    console.log("----------------이게왜 안나와???????????????userIdx :". userIdx)
+    console.log("----------------이게왜 안나와???????????????userIdx :", userIdx)
 
     //질문정보
     const selectQuestion = `
@@ -190,7 +189,7 @@ async function SelectCollection(connection, userIdx) {
     let newQ = []
     for(let i = 0 ; i < selectAnswerRow.length ; i++){
         let num = selectAnswerRow[i].qNum
-        let t = {qnacontent : selectQuestionRow[num].qnacontent}
+        let t = {qnacontent : selectQuestionRow[num-1].qnacontent}
         newQ.push(t);
     }
 
@@ -342,8 +341,6 @@ async function SelectQlist(connection, userIdx) {
         stampImg: selectImgRow[0].stampImg,
         question: Qlist
         }
-        
-console.log(selectCollectionRow)
 
     return selectCollectionRow;
 }

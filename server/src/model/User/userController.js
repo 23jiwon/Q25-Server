@@ -83,7 +83,7 @@ exports.login = async function (req, res) {
 */
 exports.sendTempPw = async function (req, res) {
     /*
-         body : email //TODO: body값 수정된거 확인해야함!
+         body : email 
     */
    const email = req.body.email;
 
