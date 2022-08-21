@@ -29,12 +29,15 @@ exports.getQuestion = async function (userIdx,questionIdx) {
         console.log("userQIdx : ", userQIdx);
 
         if (timeCriteria >= currentTime){
+            console.log("오픈 가능");
             const updateOpenStatusResult = await recordDao.updateOpenStatus(connection, userQIdx);
+        }else {
+            console.log("오픈 불가");
         }
 
         connection.release();
 
-        console.log(questionRows)
+        // console.log(questionRows)
         return response(baseResponse.SUCCESS,questionRows);
 
     } catch (err){
