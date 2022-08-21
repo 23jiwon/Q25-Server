@@ -15,31 +15,41 @@ const { Console } = require("console");
 
 // 선물상자 누르면 보내줄 정보 - email qnum은 다른걸로 바꾸기
 exports.getQuestion = async function (userIdx,questionIdx) {
+    const connection = await pool.getConnection(async (conn) => conn);
     try{
+        //시간 비교
+        const current = new Date();
+        const currentTime = current.getTime();
+        console.log(`current Time :`,currentTime);
+
+        const timeresult = await recordDao.getTimeCriteria(connection, questionIdx);
+        const timeCriteria = timeresult[0][0].openTime.getTime();
+        console.log("timeCriteria :", timeCriteria)
+
+        let userQIdx = await recordDao.getUserQIdx(connection, userIdx, questionIdx);
+        userQIdx = userQIdx[0][0].userQIdx
+
+        if (timeCriteria <= currentTime){
+            console.log("오픈 가능");
+            const updateOpenStatusResult = await recordDao.updateOpenStatus(connection, userQIdx);
+        }else {
+            console.log("오픈 불가");
+            return response(baseResponse.NOT_YET_TIME)
+        }
         // 이메일에 있는 질문 번호 가져오기
-        const connection = await pool.getConnection(async (conn) => conn);
+        console.log("userQIdx :", userQIdx);
+        const openedValue = await recordDao.getOpened(connection, userQIdx);
+        console.log("openedValue: ", openedValue[0][0].opened);
+
         const questionRows = await recordProvider.getQuestion(userIdx,questionIdx);
 
-        //시간 비교
-        const currentTime = new Date();
-        console.log(`current Date : ${currentTime}`);
-        const timeCriteria = await recordDao.getTimeCriteria(connection, questionIdx);
-        console.log("timeCriteria : ", timeCriteria);
-        const userQIdx = await recordDao.getUserQIdx(connection, userIdx, questionIdx);
-        console.log("userQIdx : ", userQIdx);
-
-        if (timeCriteria >= currentTime){
-            const updateOpenStatusResult = await recordDao.updateOpenStatus(connection, userQIdx);
-        }
-
-        connection.release();
-
-        console.log(questionRows)
         return response(baseResponse.SUCCESS,questionRows);
-
+        // console.log(questionRows)
     } catch (err){
         logger.error(`getQuestion Service error\n : ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
+    } finally {
+        connection.release();
     }
 };
 

@@ -20,7 +20,7 @@ exports.createUser = async function (nickName, email, password) {
     try{
         // 이메일 중복 확인
         const emailRows = await userProvider.emailCheck(email);
-        console.log("emailRows:", emailRows);
+        // console.log("emailRows:", emailRows);
         if(emailRows.length > 0) {
             return errResponse(baseResponse.SIGNUP_REDUNDANT_EMAIL);
         }
@@ -59,11 +59,12 @@ exports.createUser = async function (nickName, email, password) {
 //로그인 수정필요 + 로그아웃 만들어야함
 exports.postSignIn = async function (email, password) {
 
-    console.log(email, password)
+    // console.log(email, password)
 
     try {
         const emailRows = await userProvider.LoginCheck(email); //이메일 확인
 
+        // console.log(emailRows)
         if(emailRows === null){
             return errResponse(baseResponse.SIGNIN_EMAIL_WRONG);
         }
@@ -72,7 +73,7 @@ exports.postSignIn = async function (email, password) {
         }
         // 탈퇴된 계정인지 확인
         const checkStatusRows = await userProvider.checkStatus(email);
-        console.log(checkStatusRows[0][0].userStatus);
+        // console.log(checkStatusRows[0][0].userStatus);
         if(checkStatusRows[0][0].userStatus == 'INACTIVE'){
             return errResponse(baseResponse.SIGNIN_INACTIVE_ACCOUNT);
         }
@@ -167,7 +168,7 @@ exports.sendPw = async function (userEmail) {
         console.log(`random password : ${randomPassword}`);
 
         const emailRows = await userProvider.emailCheck(userEmail);
-        console.log("emailRows:", emailRows);
+        // console.log("emailRows:", emailRows);
         
         // console.log(`발신인 : ${process.env.EMAIL_USER}`);
         if (emailRows.length > 0){
@@ -199,7 +200,7 @@ exports.patchPw = async function (userIdx, old_pw, new_pw) {
     const connection = await pool.getConnection(async (conn) => conn);
     const PwRows = await userProvider.InsertPw(userIdx, old_pw, new_pw);
 
-    console.log(PwRows)
+    // console.log(PwRows)
     if(PwRows.old_pw === null){
         return response(baseResponse.UPDATE_PW_WRONG);
     }
@@ -238,6 +239,7 @@ exports.logout = async function(userIdx) {
 exports.withdraw = async function(email, password) {
     try {
         const connection = await pool.getConnection(async (conn) => conn);
+        console.log("탈퇴 시작");
         const checkAccountResult = await userProvider.checkAccout(email, password);
         const userIdx = checkAccountResult[0][0].userIdx;
         console.log(userIdx);

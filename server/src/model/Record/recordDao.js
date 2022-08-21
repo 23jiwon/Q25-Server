@@ -160,9 +160,20 @@ async function updateOpenStatus(connection, userQIdx) {
     return updateOpenStatusRow[0];
 };
 
+async function getOpened(connection, userQIdx) {
+    const getOpenedQuery = `
+        SELECT opened
+        FROM pagetbl
+        WHERE userQIdx = ?;
+    `;
+    const getOpenedRows = await connection.query(getOpenedQuery, userQIdx);
+
+    return getOpenedRows
+}
+
 //질문 모아보기 답변한것만
 async function SelectCollection(connection, userIdx) {
-    console.log("----------------이게왜 안나와???????????????userIdx :", userIdx)
+    console.log("----------------이게왜 안나와???????????????userIdx :", userIdx);
 
     //질문정보
     const selectQuestion = `
@@ -225,7 +236,7 @@ async function SelectCollection(connection, userIdx) {
         }
         collection.push(t);
     }
-    console.log("dao에서 collection :", collection);
+    // console.log("dao에서 collection :", collection);
 
     let selectCollectionRow = 
         {
@@ -233,7 +244,7 @@ async function SelectCollection(connection, userIdx) {
         question: collection
         }
         
-    console.log("dao에서 selectCollectionRow: ", selectCollectionRow)
+    // console.log("dao에서 selectCollectionRow: ", selectCollectionRow)
 
     return selectCollectionRow;
 }
@@ -347,14 +358,14 @@ async function SelectQlist(connection, userIdx) {
 
 
 async function getUserQIdx(connection, userIdx, questionIdx) {
-    console.log("userIdx, questionIdx :", userIdx, questionIdx);
+    // console.log("userIdx, questionIdx :", userIdx, questionIdx);
     const getUserQIdxQuery = `
         SELECT userQIdx
         FROM christmas25.pagetbl
         WHERE userIdx = ? and questionIdx = ?;
     `;
     const getUserQIdxRow = await connection.query(getUserQIdxQuery, [userIdx, questionIdx]);
-    console.log("getUserQIdxRow :", getUserQIdxRow);
+    // console.log("getUserQIdxRow :", getUserQIdxRow);
     return getUserQIdxRow;
 }
 
@@ -365,6 +376,7 @@ module.exports = {
     addNewRows,
     getTimeCriteria,
     updateOpenStatus,
+    getOpened,
     SelectCollection,
     SelectQlist,
     getUserQIdx
