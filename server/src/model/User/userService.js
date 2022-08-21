@@ -239,11 +239,12 @@ exports.logout = async function(userIdx) {
 exports.withdraw = async function(email, password) {
     try {
         const connection = await pool.getConnection(async (conn) => conn);
+        console.log("탈퇴 시작");
         const checkAccountResult = await userProvider.checkAccout(email, password);
         const userIdx = checkAccountResult[0][0].userIdx;
-        // console.log(userIdx);
+        console.log(userIdx);
         const withdrawResult = await userDao.withdrawAccount(connection, userIdx);
-        // console.log("withdrawResult 이후 :", withdrawResult);
+        console.log("withdrawResult 이후 :", withdrawResult);
         connection.release();
         return response(baseResponse.SUCCESS);
     } catch (err) {

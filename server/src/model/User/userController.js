@@ -128,5 +128,6 @@ exports.withdraw = async function (req, res) {
      */
     const {email, password} = req.body;
     const withdrawResponse = await userService.withdraw(email, password);
+    console.log("탈퇴 완료");
     return res.send(withdrawResponse);
 }
