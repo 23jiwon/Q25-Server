@@ -11,7 +11,7 @@ const {errResponse} = require("../../../config/response");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { Console } = require("console");
-
+const schedule = require("node-schedule");
 
 // 선물상자 누르면 보내줄 정보 - email qnum은 다른걸로 바꾸기
 exports.getQuestion = async function (userIdx,questionIdx) {

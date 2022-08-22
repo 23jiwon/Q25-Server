@@ -140,6 +140,21 @@ async function updateOpenStatus(connection, userQIdx) {
     const updateOpenStatusRow = await connection.query(updateOpenStatusQuery, userQIdx);
     return updateOpenStatusRow[0];
 };
+
+/* 수정중인 코드
+async function updateOpenStatus(connection, qnum) {
+    const updateOpenStatusQuery = `
+        UPDATE pageTBL p, questiontbl q
+        SET p.opened = '1'
+        WHERE p.questionIdx = ?;
+    `;
+
+    const updateOpenStatusRow = await connection.query(updateOpenStatusQuery, qnum);
+    
+    return updateOpenStatusRow;
+};
+*/
+
 //질문 모아보기 답변한것만
 async function SelectCollection(connection, userIdx) {
     console.log("----------------이게왜 안나와???????????????userIdx :", userIdx)
@@ -306,7 +321,7 @@ async function SelectQlist(connection, userIdx) {
         question: Qlist
         }
 
-console.log(selectCollectionRow)
+    // console.log(selectCollectionRow)
 
     return selectCollectionRow;
 }
