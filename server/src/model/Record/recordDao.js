@@ -335,6 +335,7 @@ async function getUserQIdx(connection, userIdx, questionIdx) {
     console.log("getUserQIdxRow :", getUserQIdxRow);
     return getUserQIdxRow;
 }
+
 module.exports = {
     SelectQuestion,
     InsertAnswer,

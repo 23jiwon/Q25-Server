@@ -18,8 +18,8 @@ exports.getQuestion = async function (userIdx,questionIdx) {
     const connection = await pool.getConnection(async (conn) => conn);
     // 이메일에 있는 질문 번호 가져오기
     try{
-    //     let userQIdx = await recordDao.getUserQIdx(connection, userIdx, questionIdx);
-    //      userQIdx = userQIdx[0][0].userQIdx
+        let userQIdx = await recordDao.getUserQIdx(connection, userIdx, questionIdx);
+        userQIdx = userQIdx[0][0].userQIdx;
         const questionRows = await recordProvider.getQuestion(userIdx,questionIdx);
         console.log(questionRows)
 
@@ -37,10 +37,6 @@ exports.patchRecord = async function (answer,userIdx,qNum) {
     const connection = await pool.getConnection(async (conn) => conn);
     try{ 
         const recordRows = await recordProvider.patchRecord(answer,userIdx,qNum);
-
-        
-        connection.release();
-
         return response(baseResponse.SUCCESS, recordRows);
 
 
@@ -91,6 +87,7 @@ exports.getQlist = async function (userIdx) {
 };
 
 // opened 일괄 변경
+/*
 module.exports = {
     updateOpened: () => {
         schedule.scheduleJob('30 * * * * *', async()=>{
@@ -105,9 +102,10 @@ module.exports = {
                     updateQuestionList.push(i);
                 }
             }
-            // console.log("updateQuestionList:", updateQuestionList);
+            console.log("updateQuestionList:", updateQuestionList);
             for(var qnum in updateQuestionList){
                 const updateOpenStatusResult = await recordDao.updateOpenStatus(connection, qnum+1);
+                console.log(qnum);
             }
             console.log("opened update 완료")
             
@@ -117,4 +115,29 @@ module.exports = {
         // updateOpened.cancel(); //schedule 취소
         }
 }
+*/
 
+// opened 일괄 변경
+
+// exports.updateOpened = async function() {
+//     schedule.scheduleJob('30 * * * * *', async()=>{
+//         const connection = await pool.getConnection(async (conn) => conn);
+
+//         let today_date = new Date();
+//         today_date = today_date.getDate();
+//         console.log("today:", today_date )
+//         const updateQuestionList = [];
+//         for(var i=1; i<26; i++) {
+//             if(i<=today_date) {
+//                 updateQuestionList.push(i);
+//             }
+//         }
+//         console.log(updateQuestionList);
+//         for(var qnum in updateQuestionList) {
+//             const updateOpenStatusResult = await recordDao.updateOpenStatus(connection, qnum+1);
+//         }
+
+//         console.log("opened update 완료");
+//         connection.release();
+//     });
+// };
