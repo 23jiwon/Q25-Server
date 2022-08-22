@@ -155,6 +155,17 @@ async function updateOpenStatus(connection, qnum) {
 };
 */
 
+async function getOpened(connection, userQIdx) {
+    const getOpenedQuery = `
+        SELECT opened
+        FROM pagetbl
+        WHERE userQIdx = ?;
+    `;
+    const getOpenedRows = await connection.query(getOpenedQuery, userQIdx);
+
+    return getOpenedRows
+}
+
 //질문 모아보기 답변한것만
 async function SelectCollection(connection, userIdx) {
     console.log("----------------이게왜 안나와???????????????userIdx :", userIdx)
@@ -225,6 +236,7 @@ async function SelectCollection(connection, userIdx) {
     console.log("dao에서 selectCollectionRow: ", selectCollectionRow)
     return selectCollectionRow;
 }
+
 //질문 리스트 25개
 async function SelectQlist(connection, userIdx) {
     //질문정보
@@ -325,6 +337,7 @@ async function SelectQlist(connection, userIdx) {
 
     return selectCollectionRow;
 }
+
 async function getUserQIdx(connection, userIdx, questionIdx) {
     console.log("userIdx, questionIdx :", userIdx, questionIdx);
     const getUserQIdxQuery = `
@@ -344,5 +357,6 @@ module.exports = {
     updateOpenStatus,
     SelectCollection,
     SelectQlist,
-    getUserQIdx
+    getUserQIdx,
+    getOpened
 };
