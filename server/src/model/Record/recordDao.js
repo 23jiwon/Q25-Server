@@ -10,7 +10,6 @@ async function SelectQuestion(connection, userIdx,qNum) {
         selectQuestion,
         qNum
     );
-
 //DB수정해서 IDX 없애고 이메일넣던가해야함 --- 이거 답변도 보내야하지않나? 물어봐야함
     const selectAnswer = `
     SELECT answer
@@ -22,7 +21,6 @@ async function SelectQuestion(connection, userIdx,qNum) {
         [qNum,
         userIdx]
     );
-
     let answer =[];
     if(selectAnswerRow[0].answer === null){
         let t = {answer : null};
@@ -44,7 +42,6 @@ async function SelectQuestion(connection, userIdx,qNum) {
             qnacontent:” ”,
             answer:""
             }
-
     */
  
     let selectQARow = {
@@ -53,11 +50,8 @@ async function SelectQuestion(connection, userIdx,qNum) {
     qnacontent:selectquestionRow[0].qnacontent,
     answer:answer[0].answer
     }
-
     return selectQARow;
 }
-
-
 // 답 저장하기
 async function InsertAnswer(connection, answer, userIdx, qNum) {
     const insertAnswerQuery = `
@@ -65,7 +59,6 @@ async function InsertAnswer(connection, answer, userIdx, qNum) {
     SET answer=?
     WHERE userIdx=? AND questionIdx=? 
     `;
-
     const insertAnswerRow = await connection.query(
         insertAnswerQuery,
         [answer,
@@ -73,7 +66,6 @@ async function InsertAnswer(connection, answer, userIdx, qNum) {
         qNum]
     );
     //답변 저장 성공
-
     /*
     {isSuccess:{
     qNum:”1”
@@ -104,13 +96,10 @@ async function InsertAnswer(connection, answer, userIdx, qNum) {
         selectQuestionQuery,
         qNum,
     );
-
-
     let selectYN = 0
     if((selectAnswerRow[0].answer).length > 0){
         selectYN++;
     }
-
     let AnswerRow = 
         {
         qNum:selectQuestionRow[0].qNum,
@@ -120,10 +109,8 @@ async function InsertAnswer(connection, answer, userIdx, qNum) {
         answer : selectAnswerRow[0].answer
         }  
         
-
     return AnswerRow; 
 }
-
 //회원가입 시 db 추가
 async function addNewRows(connection, addNewRowsParams){
     const addNewRowsQuery = `
@@ -131,10 +118,8 @@ async function addNewRows(connection, addNewRowsParams){
         VALUES (?, ?);
     `;
     const addNewRowsRow = await connection.query(addNewRowsQuery, addNewRowsParams);
-
     return addNewRowsRow;
 };
-
 //기준 기간 가져오기
 async function getTimeCriteria(connection, questionIdx){
     const getTimeCriteriaQuery = `
@@ -142,11 +127,9 @@ async function getTimeCriteria(connection, questionIdx){
         FROM questionTBL
         WHERE questionIdx = ?;
     `;
-
     const TimeCriteriaRow = await connection.query(getTimeCriteriaQuery, questionIdx);
     return TimeCriteriaRow;
 };
-
 //시간 돼서 질문 열리면 opened=1로 변경
 async function updateOpenStatus(connection, userQIdx) {
     const updateOpenStatusQuery = `
@@ -154,27 +137,12 @@ async function updateOpenStatus(connection, userQIdx) {
         SET opened = '1'
         WHERE userQIdx = ?;
     `;
-
     const updateOpenStatusRow = await connection.query(updateOpenStatusQuery, userQIdx);
-
     return updateOpenStatusRow[0];
 };
-
-async function getOpened(connection, userQIdx) {
-    const getOpenedQuery = `
-        SELECT opened
-        FROM pagetbl
-        WHERE userQIdx = ?;
-    `;
-    const getOpenedRows = await connection.query(getOpenedQuery, userQIdx);
-
-    return getOpenedRows
-}
-
 //질문 모아보기 답변한것만
 async function SelectCollection(connection, userIdx) {
-    console.log("----------------이게왜 안나와???????????????userIdx :", userIdx);
-
+    console.log("----------------이게왜 안나와???????????????userIdx :", userIdx)
     //질문정보
     const selectQuestion = `
         SELECT questionIdx as qNum, content as qnacontent, CONCAT('http://localhost:5000/christmasQ25_asset/', questionImg) as qnaImg
@@ -184,7 +152,6 @@ async function SelectCollection(connection, userIdx) {
         selectQuestion,
         userIdx
     );
-
     //답변정보
     const selectAnswer = `
     SELECT questionIdx as qNum, answer
@@ -195,7 +162,6 @@ async function SelectCollection(connection, userIdx) {
         selectAnswer,
         userIdx
     );
-
     //답변이 있는 질문 모으기
     let newQ = []
     for(let i = 0 ; i < selectAnswerRow.length ; i++){
@@ -203,7 +169,6 @@ async function SelectCollection(connection, userIdx) {
         let t = {qnacontent : selectQuestionRow[num-1].qnacontent}
         newQ.push(t);
     }
-
     //유저 정보
     const selectUser = `
     SELECT nickName
@@ -225,7 +190,6 @@ async function SelectCollection(connection, userIdx) {
         },
       
     */
-
     //리턴값 
     let collection = []
     for(let i = 0 ; i < selectAnswerRow.length ; i++){
@@ -236,22 +200,18 @@ async function SelectCollection(connection, userIdx) {
         }
         collection.push(t);
     }
-    // console.log("dao에서 collection :", collection);
-
+    console.log("dao에서 collection :", collection);
     let selectCollectionRow = 
         {
         nickName : selectUserRow[0].nickName,
         question: collection
         }
         
-    // console.log("dao에서 selectCollectionRow: ", selectCollectionRow)
-
+    console.log("dao에서 selectCollectionRow: ", selectCollectionRow)
     return selectCollectionRow;
 }
-
 //질문 리스트 25개
 async function SelectQlist(connection, userIdx) {
-
     //질문정보
     const selectQuestion = `
         SELECT questionIdx as qNum, content as qnacontent, 
@@ -263,7 +223,6 @@ async function SelectQlist(connection, userIdx) {
         selectQuestion,
         userIdx
     );
-
     //답변정보
     const selectAnswer = `
     SELECT questionIdx as qNum, opened, answer
@@ -274,8 +233,6 @@ async function SelectQlist(connection, userIdx) {
         selectAnswer,
         userIdx
     );
-
-
     //유저 정보
     const selectUser = `
     SELECT nickName
@@ -286,7 +243,6 @@ async function SelectQlist(connection, userIdx) {
         selectUser,
         userIdx
     );
-
     //이미지 정보
     const selectImg = `
     SELECT  CONCAT('http://localhost:5000/christmasQ25_asset', imageUrl) as stampImg 
@@ -296,7 +252,6 @@ async function SelectQlist(connection, userIdx) {
     const [selectImgRow] = await connection.query(
         selectImg
     );
-
     let selectYN = []
     for(let i = 0 ; i < 25 ; i++){
         if(selectAnswerRow[i].answer===null){
@@ -333,7 +288,6 @@ async function SelectQlist(connection, userIdx) {
 }
       
     */
-
     //리턴값 
     let Qlist = []
     for(let i = 0 ; i < selectAnswerRow.length ; i++){
@@ -345,7 +299,6 @@ async function SelectQlist(connection, userIdx) {
         }
         Qlist.push(t);
     }
-
     let selectCollectionRow = 
         {
         nickName : selectUserRow[0].nickName,
@@ -353,30 +306,27 @@ async function SelectQlist(connection, userIdx) {
         question: Qlist
         }
 
+console.log(selectCollectionRow)
+
     return selectCollectionRow;
 }
-
-
 async function getUserQIdx(connection, userIdx, questionIdx) {
-    // console.log("userIdx, questionIdx :", userIdx, questionIdx);
+    console.log("userIdx, questionIdx :", userIdx, questionIdx);
     const getUserQIdxQuery = `
         SELECT userQIdx
         FROM christmas25.pagetbl
         WHERE userIdx = ? and questionIdx = ?;
     `;
     const getUserQIdxRow = await connection.query(getUserQIdxQuery, [userIdx, questionIdx]);
-    // console.log("getUserQIdxRow :", getUserQIdxRow);
+    console.log("getUserQIdxRow :", getUserQIdxRow);
     return getUserQIdxRow;
 }
-
-
 module.exports = {
     SelectQuestion,
     InsertAnswer,
     addNewRows,
     getTimeCriteria,
     updateOpenStatus,
-    getOpened,
     SelectCollection,
     SelectQlist,
     getUserQIdx
