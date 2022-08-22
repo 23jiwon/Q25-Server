@@ -65,6 +65,7 @@ exports.getQlist = async function (req,res) {
     */
 
     const { userIdx } = req.query;
+    console.log(userIdx);
    const getQlistResponse = await recordService.getQlist(
     userIdx, 
     );
