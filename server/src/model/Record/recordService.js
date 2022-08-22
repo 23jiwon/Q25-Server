@@ -96,10 +96,9 @@ exports.getCollection = async function (userIdx) {
 exports.getQlist = async function (userIdx) {
     try{
         // 선물상자 25개 출력
-        const getQlistRows = await recordProvider.getQlistRows(userIdx);
         const connection = await pool.getConnection(async (conn) => conn);
+        const getQlistRows = await recordProvider.getQlistRows(userIdx);
         connection.release();
-
 
         return response(baseResponse.SUCCESS, getQlistRows);
 
