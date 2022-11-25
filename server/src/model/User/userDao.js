@@ -3,7 +3,7 @@ const { USER_USEREMAIL_EMPTY } = require('../../../config/baseResponseStatus');
 // 유저 생성
 async function insertUserInfo(connection, insertUserInfoParams) {
     const insertUserInfoQuery = `
-        INSERT INTO usertbl(nickName, email, password)
+        INSERT INTO userTBL(nickName, email, password)
         VALUES (?, ?, ?);
     `;
     
@@ -31,7 +31,7 @@ async function selectUserPassword(connection, email){
 
     const selectUserPasswordQuery=`
         SELECT password
-        FROM christmas25.usertbl
+        FROM christmas25.userTBL
         WHERE email = ? ;
         `
     const [selectUserPassword] = await connection.query(selectUserPasswordQuery,email)
